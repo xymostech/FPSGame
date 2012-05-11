@@ -38,13 +38,13 @@ build/mac/%.o: src/%.c $(HEAD)
 
 LINOBJ=$(addprefix build/linux/,$(OBJ))
 
-MACCFLAGS=$(CLFAGS)
-MACLFLAGS=$(LFLAGS) -lGL -lGLU -lglfw -lm
+LINCFLAGS=$(CLFAGS)
+LINLFLAGS=$(LFLAGS) -lGL -lGLU -lglfw -lm
 
 linux: $(PROD)-linux
 
 $(PROD)-linux: $(LINOBJ)
-	$(CC) -o $@ $^ $(MACLFLAGS)
+	$(CC) -o $@ $^ $(LINLFLAGS)
 
 build/linux/%.o: src/%.c $(HEAD)
-	$(CC) -c -o $@ $< $(MACCFLAGS)
+	$(CC) -c -o $@ $< $(LINCFLAGS)
