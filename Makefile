@@ -17,3 +17,7 @@ $(PROD): $(BOBJ)
 
 build/%.o: src/%.c $(HEAD)
 	$(CC) -c -o $@ $< $(CFLAGS)
+
+.PHONY: clean
+clean:
+	rm -f $(PROD) build/*
