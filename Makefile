@@ -17,7 +17,7 @@ none:
 
 .PHONY: clean
 clean:
-	rm -rf $(PROD) build/*
+	rm -rf $(PROD)-* build/mac/* build/linux/*
 
 #===== MAC BUILD =====#
 
