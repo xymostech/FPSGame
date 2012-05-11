@@ -10,8 +10,56 @@ void init() {
 	glDepthFunc(GL_LEQUAL);
 }
 
+void pyramid() {
+	glColor3f(1, 1, 1);
+
+	glBegin(GL_TRIANGLE_STRIP);
+		glVertex3f(0, 1, 0);
+		glVertex3f(0, -0.5, 0.5);
+		glVertex3f(0.5, -0.5, -0.5);
+		glVertex3f(-0.5, -0.5, -0.5);
+		glVertex3f(0, -0.5, 0.5);
+		glVertex3f(0, 1, 0);
+	glEnd();
+
+	glColor3f(0, 0, 0);
+
+	glBegin(GL_LINE_LOOP);
+		glVertex3f(0, -0.5, 0.5);
+		glVertex3f(0.5, -0.5, -0.5);
+		glVertex3f(-0.5, -0.5, -0.5);
+	glEnd();
+	glBegin(GL_LINES);
+		glVertex3f(0, 1, 0);
+		glVertex3f(0, -0.5, 0.5);
+		glVertex3f(0, 1, 0);
+		glVertex3f(0.5, -0.5, -0.5);
+		glVertex3f(0, 1, 0);
+		glVertex3f(-0.5, -0.5, -0.5);
+	glEnd();
+}
+
 void draw() {
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+	glLoadIdentity();
+	gluLookAt(0, 0, 0, 0, 0, -1, 0, 1, 0);
+
+	glPushMatrix();
+
+	glTranslatef(2, 0, -5);
+
+	pyramid();
+
+	glPopMatrix();
+
+	glPushMatrix();
+
+	glTranslatef(-2, 0, -5);
+
+	pyramid();
+
+	glPopMatrix();
 }
 
 void update() {
