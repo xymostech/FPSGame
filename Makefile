@@ -6,7 +6,8 @@ LFLAGS+=
 OBJ=main.o\
     key.o\
     mouse.o\
-    window.o
+    window.o\
+    cam.o
 HEAD=$(wildcard src/*.h)
 
 PROD=FPS
