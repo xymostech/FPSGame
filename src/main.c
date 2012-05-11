@@ -2,6 +2,7 @@
 
 #include "window.h"
 #include "key.h"
+#include "cam.h"
 
 void init() {
 	glClearColor(0.1, 0.1, 0.1, 0);
@@ -42,8 +43,12 @@ void pyramid() {
 void draw() {
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-	glLoadIdentity();
-	gluLookAt(0, 0, 0, 0, 0, -1, 0, 1, 0);
+	struct cam my_cam;
+
+	my_cam.yang = M_PI_2;
+	my_cam.xang = -M_PI_2;
+
+	setup_cam(&my_cam);
 
 	glPushMatrix();
 
