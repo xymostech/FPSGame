@@ -45,6 +45,8 @@ void draw() {
 
 	struct cam my_cam;
 
+	my_cam.x = my_cam.y = my_cam.z = 0;
+
 	my_cam.yang = M_PI_2;
 	my_cam.xang = -M_PI_2;
 
