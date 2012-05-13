@@ -70,6 +70,7 @@ void draw() {
 }
 
 void update() {
+	player_selfupdate(my_player);
 	player_update(my_player, my_world);
 }
 

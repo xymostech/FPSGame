@@ -20,7 +20,9 @@ struct player {
 };
 
 struct player* player_init();
-void player_update(struct player*, struct world*);
 void player_delete(struct player*);
+
+void player_selfupdate(struct player*);
+void player_update(struct player*, struct world*);
 
 #endif /* PLAYER_H */

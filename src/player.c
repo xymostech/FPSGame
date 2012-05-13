@@ -23,7 +23,11 @@ struct player* player_init() {
 	return player;
 }
 
-void player_update(struct player *player, struct world *world) {
+void player_delete(struct player *player) {
+	free(player);
+}
+
+void player_selfupdate(struct player *player) {
 	if (glfwGetKey('W')) {
 		player->x += 0.05*cos(player->xang);
 		player->z += 0.05*sin(player->xang);
@@ -40,6 +44,9 @@ void player_update(struct player *player, struct world *world) {
 	if (player->on_ground && key_just_pressed(' ')) {
 		player->yvel += 0.3;
 	}
+}
+
+void player_update(struct player *player, struct world *world) {
 	float old_y = player->y;
 	player->yvel -= 0.04;
 	player->y += player->yvel;
@@ -78,8 +85,4 @@ void player_update(struct player *player, struct world *world) {
 	player->cam.yang = player->yang;
 
 	setup_cam(&player->cam);
-}
-
-void player_delete(struct player *player) {
-	free(player);
 }
