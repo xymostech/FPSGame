@@ -7,6 +7,7 @@
 
 struct player {
 	float x, y, z;
+	float xang, yang;
 	struct cam cam;
 };
 

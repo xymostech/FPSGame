@@ -7,6 +7,9 @@ struct player* player_init() {
 	player->y = 0;
 	player->z = 0;
 
+	player->yang = M_PI_2;
+	player->xang = -M_PI_2;
+
 	player->cam.x = 0;
 	player->cam.y = 0;
 	player->cam.z = 0;
@@ -25,6 +28,9 @@ void player_update(struct player *player) {
 	player->cam.x = player->x;
 	player->cam.y = player->y;
 	player->cam.z = player->z;
+	
+	player->cam.xang = player->xang;
+	player->cam.yang = player->yang;
 
 	setup_cam(&player->cam);
 }
