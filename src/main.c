@@ -70,7 +70,7 @@ void draw() {
 }
 
 void update() {
-	player_update(my_player);
+	player_update(my_player, my_world);
 }
 
 int main(int argc, char const **argv) {

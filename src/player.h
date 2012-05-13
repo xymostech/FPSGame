@@ -18,7 +18,7 @@ struct player {
 };
 
 struct player* player_init();
-void player_update(struct player*);
+void player_update(struct player*, struct world*);
 void player_delete(struct player*);
 
 #endif /* PLAYER_H */

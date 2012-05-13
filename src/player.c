@@ -22,7 +22,7 @@ struct player* player_init() {
 	return player;
 }
 
-void player_update(struct player *player) {
+void player_update(struct player *player, struct world *world) {
 	if (glfwGetKey('W')) {
 		player->x += 0.05*cos(player->xang);
 		player->z += 0.05*sin(player->xang);
