@@ -49,7 +49,7 @@ void player_update(struct player *player) {
 	}
 
 	player->cam.x = player->x;
-	player->cam.y = player->y;
+	player->cam.y = player->y + 0.4;
 	player->cam.z = player->z;
 	
 	player->cam.xang = player->xang;
