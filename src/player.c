@@ -24,6 +24,11 @@ void player_update(struct player *player) {
 	if (glfwGetKey('W')) {
 		player->x += 0.05;
 	}
+	if (glfwGetKey('A')) {
+		player->xang += 0.03;
+	} else if (glfwGetKey('D')) {
+		player->xang -= 0.03;
+	}
 
 	player->cam.x = player->x;
 	player->cam.y = player->y;
