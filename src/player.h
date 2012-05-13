@@ -2,6 +2,7 @@
 #define PLAYER_H
 
 #include <stdlib.h>
+#include <math.h>
 
 #include "cam.h"
 
