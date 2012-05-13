@@ -9,7 +9,8 @@ OBJ=main.o\
     window.o\
     cam.o\
     player.o\
-    world.o
+    world.o\
+    model.o
 HEAD=$(wildcard src/*.h)
 
 PROD=FPS
