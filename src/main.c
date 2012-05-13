@@ -15,6 +15,8 @@ void init() {
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 
+	glfwDisable(GLFW_MOUSE_CURSOR);
+
 	my_player = player_init();
 	my_world = world_init();
 }
