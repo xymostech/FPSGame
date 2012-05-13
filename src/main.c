@@ -57,20 +57,16 @@ void draw() {
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
 	glPushMatrix();
-
-	glTranslatef(2, 0, -5);
-
-	pyramid();
-
+		glTranslatef(2, 0, -5);
+		pyramid();
 	glPopMatrix();
 
 	glPushMatrix();
-
-	glTranslatef(-2, 0, -5);
-
-	pyramid();
-
+		glTranslatef(-2, 0, -5);
+		pyramid();
 	glPopMatrix();
+
+	world_draw(my_world);
 }
 
 void update() {
