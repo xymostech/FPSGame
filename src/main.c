@@ -4,8 +4,10 @@
 #include "key.h"
 #include "cam.h"
 #include "player.h"
+#include "world.h"
 
 struct player *my_player;
+struct world *my_world;
 
 void init() {
 	glClearColor(0.1, 0.1, 0.1, 0);
@@ -14,10 +16,12 @@ void init() {
 	glDepthFunc(GL_LEQUAL);
 
 	my_player = player_init();
+	my_world = world_init();
 }
 
 void terminate() {
 	player_delete(my_player);
+	world_delete(my_world);
 }
 
 void pyramid() {
