@@ -3,12 +3,21 @@
 #include "window.h"
 #include "key.h"
 #include "cam.h"
+#include "player.h"
+
+struct player *my_player;
 
 void init() {
 	glClearColor(0.1, 0.1, 0.1, 0);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
+
+	my_player = player_init();
+}
+
+void terminate() {
+	player_delete(my_player);
 }
 
 void pyramid() {
@@ -43,15 +52,6 @@ void pyramid() {
 void draw() {
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-	struct cam my_cam;
-
-	my_cam.x = my_cam.y = my_cam.z = 0;
-
-	my_cam.yang = M_PI_2;
-	my_cam.xang = -M_PI_2;
-
-	setup_cam(&my_cam);
-
 	glPushMatrix();
 
 	glTranslatef(2, 0, -5);
@@ -70,6 +70,7 @@ void draw() {
 }
 
 void update() {
+	player_update(my_player);
 }
 
 int main(int argc, char const **argv) {
@@ -98,8 +99,9 @@ int main(int argc, char const **argv) {
 		glfwSleep(0.01);
 	}
 
-	glfwCloseWindow();
+	terminate();
 
+	glfwCloseWindow();
 	glfwTerminate();
 
 	return 0;
