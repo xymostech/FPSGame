@@ -22,6 +22,8 @@ struct world* world_init() {
 
 	world->objects = NULL;
 
+	world_add_object(world, world_floor_init(-5, -5, 5, 5));
+
 	return world;
 }
 
