@@ -24,6 +24,9 @@ void player_update(struct player *player) {
 	if (glfwGetKey('W')) {
 		player->x += 0.05*cos(player->xang);
 		player->z += 0.05*sin(player->xang);
+	} else if (glfwGetKey('S')) {
+		player->x -= 0.05*cos(player->xang);
+		player->z -= 0.05*sin(player->xang);
 	}
 	if (glfwGetKey('A')) {
 		player->xang += 0.03;
