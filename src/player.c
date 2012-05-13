@@ -1,4 +1,5 @@
 #include "player.h"
+#include "world.h"
 
 struct player* player_init() {
 	struct player *player = malloc(sizeof(*player));

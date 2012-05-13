@@ -7,6 +7,8 @@
 #include "cam.h"
 #include "key.h"
 
+struct world;
+
 struct player {
 	float x, y, z;
 	float xang, yang;
