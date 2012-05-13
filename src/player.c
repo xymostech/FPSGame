@@ -35,10 +35,19 @@ void player_selfupdate(struct player *player) {
 		player->x -= 0.05*cos(player->xang);
 		player->z -= 0.05*sin(player->xang);
 	}
-	if (glfwGetKey('A')) {
-		player->xang -= 0.03;
-	} else if (glfwGetKey('D')) {
-		player->xang += 0.03;
+
+	int x, y;
+
+	mouse_get_mouselook_diff(&x, &y);
+
+	player->xang += x / 200.0;
+	player->yang -= y / 200.0;
+
+	if (player->yang < 0) {
+		player->yang = 0;
+	}
+	if (player->yang > M_PI) {
+		player->yang = M_PI;
 	}
 
 	if (player->on_ground && key_just_pressed(' ')) {
