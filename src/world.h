@@ -30,4 +30,6 @@ struct world {
 struct world* world_init();
 void world_delete(struct world*);
 
+void world_add_object(struct world*, struct world_object*);
+
 #endif /* WORLD_H */
