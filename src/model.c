@@ -66,6 +66,18 @@ struct model* model_load(char *filename) {
 }
 
 void model_delete(struct model *model) {
+	struct point *point = model->points, *next_point;
+	while (point) {
+		next_point = point->next;
+		point_delete(point);
+		point = next_point;
+	}
+	struct polygon *poly = model->polygons, *next_poly;
+	while (poly) {
+		next_poly = poly->next;
+		polygon_delete(poly);
+		poly = next_poly;
+	}
 	free(model);
 }
 
