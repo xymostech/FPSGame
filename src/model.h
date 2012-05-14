@@ -1,10 +1,17 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
 #include "polygon.h"
 
 struct model {
-	char *name;
+	char *file;
+
+	struct point *points;
+	int num_points;
 
 	struct polygon *polygons;
 };
