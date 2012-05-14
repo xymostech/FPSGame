@@ -25,6 +25,7 @@ struct model* model_load(char *filename) {
 	struct model *model = malloc(sizeof(*model));
 
 	model->points = NULL;
+	model->num_points = 0;
 	model->polygons = NULL;
 
 	FILE *file = fopen(filename, "r");
