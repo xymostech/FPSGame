@@ -26,7 +26,7 @@ clean:
 
 MACOBJ=$(addprefix build/mac/,$(OBJ))
 
-MACCFLAGS=$(CLFAGS)
+MACCFLAGS=$(CFLAGS)
 MACLFLAGS=$(LFLAGS) -framework OpenGL -framework Cocoa -lglfw -lm
 
 mac: $(PROD)-mac
@@ -41,7 +41,7 @@ build/mac/%.o: src/%.c $(HEAD)
 
 LINOBJ=$(addprefix build/linux/,$(OBJ))
 
-LINCFLAGS=$(CLFAGS)
+LINCFLAGS=$(CFLAGS)
 LINLFLAGS=$(LFLAGS) -lGL -lGLU -lglfw -lm
 
 linux: $(PROD)-linux
