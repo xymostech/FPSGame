@@ -31,7 +31,7 @@ void polygon_delete(struct polygon *poly) {
 }
 
 void polygon_add_point(struct polygon *poly, struct point *point) {
-	point->next = poly->points;
+	point->poly_next = poly->points;
 	poly->points = point;
 }
 
@@ -40,7 +40,7 @@ void polygon_draw(struct polygon *poly) {
 	struct point *point = poly->points;
 	while (point) {
 		point_draw(point);
-		point = point->next;
+		point = point->poly_next;
 	}
 	glEnd();
 }

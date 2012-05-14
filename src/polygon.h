@@ -8,6 +8,7 @@ struct point {
 	float x, y, z;
 
 	struct point *next;
+	struct point *poly_next;
 };
 
 struct point* point_init(float, float, float);
