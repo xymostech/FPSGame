@@ -10,9 +10,6 @@
 struct model {
 	char *file;
 
-	struct point *points;
-	int num_points;
-
 	struct polygon *polygons;
 };
 

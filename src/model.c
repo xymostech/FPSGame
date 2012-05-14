@@ -24,11 +24,12 @@ struct point* lookup_point(struct point *points, int num_points, int point) {
 struct model* model_load(char *filename) {
 	struct model *model = malloc(sizeof(*model));
 
-	model->points = NULL;
-	model->num_points = 0;
 	model->polygons = NULL;
 
 	FILE *file = fopen(filename, "r");
+
+	struct point *points = NULL;
+	int num_points = 0;
 
 	char *line = malloc(0);
 	size_t size = 0;
@@ -41,9 +42,9 @@ struct model* model_load(char *filename) {
 			float x, y, z;
 			sscanf(rest, "%f %f %f", &x, &y, &z);
 			struct point *point = point_init(x, y, z);
-			point->next = model->points;
-			model->points = point;
-			model->num_points++;
+			point->next = points;
+			points = point;
+			num_points++;
 		} else if (strcmp(token, "f") == 0) {
 			struct polygon *polygon = polygon_init();
 			token = strtok_r(NULL, " \t\n", &save);
@@ -51,8 +52,8 @@ struct model* model_load(char *filename) {
 				int v;
 				parse_vertex(token, &v);
 				polygon_add_point(polygon,
-				                  lookup_point(model->points,
-				                  model->num_points, v));
+				                  lookup_point(points,
+				                  num_points, v));
 				token = strtok_r(NULL, " \t\n", &save);
 			}
 			polygon->next = model->polygons;
@@ -61,18 +62,19 @@ struct model* model_load(char *filename) {
 	} while (!feof(file));
 	free(line);
 
+	struct point *next;
+	while (points) {
+		next = points->next;
+		point_delete(points);
+		points = next;
+	}
+
 	fclose(file);
 
 	return model;
 }
 
 void model_delete(struct model *model) {
-	struct point *point = model->points, *next_point;
-	while (point) {
-		next_point = point->next;
-		point_delete(point);
-		point = next_point;
-	}
 	struct polygon *poly = model->polygons, *next_poly;
 	while (poly) {
 		next_poly = poly->next;
