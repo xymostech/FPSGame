@@ -82,5 +82,9 @@ void model_delete(struct model *model) {
 }
 
 void model_draw(struct model *model) {
-	
+	struct polygon *poly = model->polygons;
+	while (poly) {
+		polygon_draw(poly);
+		poly = poly->next;
+	}
 }
