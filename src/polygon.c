@@ -10,6 +10,10 @@ struct point* point_init(float x, float y, float z) {
 	return point;
 }
 
+struct point* point_copy(struct point *point) {
+	return point_init(point->x, point->y, point->z);
+}
+
 void point_delete(struct point *point) {
 	free(point);
 }
@@ -27,12 +31,19 @@ struct polygon* polygon_init() {
 }
 
 void polygon_delete(struct polygon *poly) {
+	struct point *point, *next;
+	while (point) {
+		next = point->next;
+		point_delete(point);
+		point = next;
+	}
 	free(poly);
 }
 
 void polygon_add_point(struct polygon *poly, struct point *point) {
-	point->poly_next = poly->points;
-	poly->points = point;
+	struct point *copy = point_copy(point);
+	copy->next = poly->points;
+	poly->points = copy;
 }
 
 void polygon_draw(struct polygon *poly) {
@@ -40,7 +51,7 @@ void polygon_draw(struct polygon *poly) {
 	struct point *point = poly->points;
 	while (point) {
 		point_draw(point);
-		point = point->poly_next;
+		point = point->next;
 	}
 	glEnd();
 }

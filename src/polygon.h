@@ -8,10 +8,10 @@ struct point {
 	float x, y, z;
 
 	struct point *next;
-	struct point *poly_next;
 };
 
 struct point* point_init(float, float, float);
+struct point* point_copy(struct point*);
 void point_delete(struct point*);
 
 void point_draw(struct point*);
