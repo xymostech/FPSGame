@@ -35,6 +35,13 @@ void player_selfupdate(struct player *player) {
 		player->x -= 0.05*cos(player->xang);
 		player->z -= 0.05*sin(player->xang);
 	}
+	if (glfwGetKey('A')) {
+		player->x += 0.05*sin(player->xang);
+		player->z -= 0.05*cos(player->xang);
+	} else if (glfwGetKey('D')) {
+		player->x -= 0.05*sin(player->xang);
+		player->z += 0.05*cos(player->xang);
+	}
 
 	int x, y;
 
