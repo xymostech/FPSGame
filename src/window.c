@@ -23,6 +23,8 @@ void window_set_perspective() {
 		glViewport(0, 0, *window_width(), *window_height());
 		gluPerspective(45, *window_width()/(float)*window_height(), 0.01, 1000);
 	glMatrixMode(GL_MODELVIEW);
+
+	glEnable(GL_DEPTH_TEST);
 }
 
 void window_set_2d() {
@@ -33,4 +35,6 @@ void window_set_2d() {
 		glViewport(0, 0, *window_width(), *window_height());
 		gluOrtho2D(-half_width, half_width, -half_height, half_height);
 	glMatrixMode(GL_MODELVIEW);
+
+	glDisable(GL_DEPTH_TEST);
 }
