@@ -1,7 +1,16 @@
 #include "world.h"
 
 void world_object_delete(struct world_object *object) {
-	free(object);
+	switch (object->type) {
+		case WORLD_FLOOR:
+			world_floor_delete((struct world_floor*)object);
+			break;
+		case WORLD_MODEL:
+			world_model_delete((struct world_model*)object);
+			break;
+		default:
+			break;
+	}
 }
 
 void world_object_draw(struct world_object *object) {
@@ -30,6 +39,10 @@ struct world_object* world_floor_init(float x1, float y1, float x2, float y2) {
 	return (struct world_object*)floor;
 }
 
+void world_floor_delete(struct world_floor *floor) {
+	free(floor);
+}
+
 void world_floor_draw(struct world_floor *floor) {
 	glColor3f(1, 1, 1);
 	
@@ -53,6 +66,11 @@ struct world_object* world_model_init(float x, float y, float z, char *file) {
 	model->model = model_load(file);
 
 	return (struct world_object*)model;
+}
+
+void world_model_delete(struct world_model *model) {
+	model_delete(model->model);
+	free(model);
 }
 
 void world_model_draw(struct world_model *model) {

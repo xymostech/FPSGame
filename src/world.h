@@ -27,6 +27,7 @@ struct world_floor {
 };
 
 struct world_object* world_floor_init(float, float, float, float);
+void world_floor_delete(struct world_floor*);
 void world_floor_draw(struct world_floor*);
 
 struct world_model {
@@ -38,6 +39,7 @@ struct world_model {
 };
 
 struct world_object* world_model_init(float, float, float, char*);
+void world_model_delete(struct world_model*);
 void world_model_draw(struct world_model*);
 
 struct world {
