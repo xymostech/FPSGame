@@ -1,7 +1,7 @@
 CC=gcc
 
-CFLAGS+=-Isrc/
-LFLAGS+=
+CFLAGS+=-Isrc/ `freetype-config --cflags`
+LFLAGS+=`freetype-config --libs`
 
 OBJ=main.o\
     key.o\
