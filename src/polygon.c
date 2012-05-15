@@ -47,8 +47,17 @@ void polygon_add_point(struct polygon *poly, struct point *point) {
 }
 
 void polygon_draw(struct polygon *poly) {
+	glColor3f(1, 1, 1);
 	glBegin(GL_POLYGON);
 	struct point *point = poly->points;
+	while (point) {
+		point_draw(point);
+		point = point->next;
+	}
+	glEnd();
+	glColor3f(0, 0, 0);
+	glBegin(GL_LINE_LOOP);
+	point = poly->points;
 	while (point) {
 		point_draw(point);
 		point = point->next;
