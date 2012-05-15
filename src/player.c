@@ -5,7 +5,7 @@ struct player* player_init() {
 	struct player *player = malloc(sizeof(*player));
 
 	player->x = 0;
-	player->y = 0.01;
+	player->y = 0.001;
 	player->z = 0;
 
 	player->yang = M_PI_2;
@@ -65,13 +65,13 @@ void player_selfupdate(struct player *player) {
 	}
 
 	if (player->on_ground && key_just_pressed(' ')) {
-		player->yvel += 0.3;
+		player->yvel += 0.1;
 	}
 }
 
 void player_update(struct player *player, struct world *world) {
 	float old_y = player->y;
-	player->yvel -= 0.04;
+	player->yvel -= 0.005;
 	player->y += player->yvel;
 
 	int colliding = 0;
@@ -95,7 +95,7 @@ void player_update(struct player *player, struct world *world) {
 	if (colliding) {
 		player->yvel = 0;
 		player->on_ground = 1;
-		player->y = 0.01;
+		player->y = 0.001;
 	} else {
 		player->on_ground = 0;
 	}
