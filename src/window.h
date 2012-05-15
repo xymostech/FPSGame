@@ -11,6 +11,7 @@ int *window_height();
 
 void GLFWCALL set_window_size(int, int);
 
-void update_window();
+void window_set_perspective();
+void window_set_2d();
 
 #endif /* WINDOW_H */
