@@ -31,7 +31,7 @@ struct polygon* polygon_init() {
 }
 
 void polygon_delete(struct polygon *poly) {
-	struct point *point, *next;
+	struct point *point = poly->points, *next;
 	while (point) {
 		next = point->next;
 		point_delete(point);
