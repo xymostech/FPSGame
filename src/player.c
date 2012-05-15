@@ -28,7 +28,7 @@ void player_delete(struct player *player) {
 }
 
 void player_selfupdate(struct player *player) {
-	float xvel, yvel, dist;
+	float xvel=0, yvel=0, dist;
 	if (glfwGetKey('W')) {
 		xvel += 0.05*cos(player->xang);
 		yvel += 0.05*sin(player->xang);
@@ -45,7 +45,7 @@ void player_selfupdate(struct player *player) {
 	}
 
 	dist = sqrt(xvel*xvel + yvel*yvel);
-	if (dist > 0) {
+	if (dist > 0.01) {
 		player->x += xvel / dist * 0.05;
 		player->z += yvel / dist * 0.05;
 	}
