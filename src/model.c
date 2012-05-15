@@ -28,6 +28,10 @@ struct model* model_load(char *filename) {
 
 	FILE *file = fopen(filename, "r");
 
+	if (!file) {
+		printf("Error loading %s: %s\n", filename, strerror(errno));
+	}
+
 	struct point *points = NULL;
 	int num_points = 0;
 
@@ -37,6 +41,9 @@ struct model* model_load(char *filename) {
 		getline(&line, &size, file);
 		char *token, *save, *rest;
 		token = strtok_r(line, " \t\n", &save);
+		if (token == NULL) {
+			continue;
+		}
 		if (strcmp(token, "v") == 0) {
 			rest = strtok_r(NULL, "\n", &save);
 			float x, y, z;
