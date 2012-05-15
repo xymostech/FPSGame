@@ -4,8 +4,11 @@
 #include <GL/glfw.h>
 #include <stdlib.h>
 
+#include "model.h"
+
 enum world_object_type {
-	WORLD_FLOOR
+	WORLD_FLOOR,
+	WORLD_MODEL
 };
 
 struct world_object {
@@ -25,6 +28,17 @@ struct world_floor {
 
 struct world_object* world_floor_init(float, float, float, float);
 void world_floor_draw(struct world_floor*);
+
+struct world_model {
+	enum world_object_type type;
+	struct world_object *next;
+
+	float x, y, z;
+	struct model *model;
+};
+
+struct world_object* world_model_init(float, float, float, char*);
+void world_model_draw(struct world_model*);
 
 struct world {
 	struct world_object *objects;

@@ -9,6 +9,9 @@ void world_object_draw(struct world_object *object) {
 		case WORLD_FLOOR:
 			world_floor_draw((struct world_floor*)object);
 			break;
+		case WORLD_MODEL:
+			world_model_draw((struct world_model*)object);
+			break;
 		default:
 			break;
 	}
@@ -38,12 +41,37 @@ void world_floor_draw(struct world_floor *floor) {
 	glEnd();
 }
 
+struct world_object* world_model_init(float x, float y, float z, char *file) {
+	struct world_model *model = malloc(sizeof(*model));
+
+	model->type = WORLD_MODEL;
+
+	model->x = x;
+	model->y = y;
+	model->z = z;
+
+	model->model = model_load(file);
+
+	return (struct world_object*)model;
+}
+
+void world_model_draw(struct world_model *model) {
+	glPushMatrix();
+
+	glTranslatef(model->x, model->y, model->z);
+
+	model_draw(model->model);
+
+	glPopMatrix();
+}
+
 struct world* world_init() {
 	struct world *world = malloc(sizeof(*world));
 
 	world->objects = NULL;
 
 	world_add_object(world, world_floor_init(-5, -5, 5, 5));
+	world_add_object(world, world_model_init(0, 0.5, 0, "res/cube.obj"));
 
 	return world;
 }
