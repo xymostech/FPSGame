@@ -5,9 +5,11 @@
 #include "cam.h"
 #include "player.h"
 #include "world.h"
+#include "hud.h"
 
 struct player *my_player;
 struct world *my_world;
+struct hud *my_hud;
 
 void init() {
 	glClearColor(0.1, 0.1, 0.1, 0);
@@ -19,16 +21,19 @@ void init() {
 
 	my_player = player_init();
 	my_world = world_init();
+	my_hud = hud_init();
 }
 
 void terminate() {
 	player_delete(my_player);
 	world_delete(my_world);
+	hud_delete(my_hud);
 }
 
 void draw() {
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	world_draw(my_world);
+	hud_draw(my_hud);
 }
 
 void update() {
