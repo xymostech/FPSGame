@@ -3,10 +3,13 @@
 struct hud* hud_init() {
 	struct hud *hud = malloc(sizeof(*hud));
 
+	hud->my_font = font_load("res/LiberationMono-Regular.ttf");
+
 	return hud;
 }
 
 void hud_delete(struct hud *hud) {
+	font_delete(hud->my_font);
 	free(hud);
 }
 
