@@ -89,13 +89,40 @@ unsigned char* load_png_data(char *filename, int *w, int *h) {
 }
 
 struct texture* texture_load(char *filename) {
-	
+	struct texture *texture = malloc(sizeof(*texture));
+
+	GLuint tex;
+
+	glGenTextures(1, &tex);
+	glBindTexture(GL_TEXTURE_2D, tex);
+
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+
+	int w, h;
+
+	unsigned char* data = load_png_data(filename, &w, &h);
+
+	if(!data) {
+		free(texture);
+		return NULL;
+	}
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	free(data);
+
+	texture->tex = tex;
+
+	return texture;
 }
 
 void texture_delete(struct texture *texture) {
-	
+	glDeleteTextures(1, &texture->tex);
+	free(texture);
 }
 
 void texture_use(struct texture *texture) {
-	
+	glBindTexture(GL_TEXTURE_2D, texture->tex);
 }
