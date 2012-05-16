@@ -2,6 +2,9 @@
 #define TEXTURE_H
 
 #include <GL/glfw.h>
+#include <png.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 struct texture {
 	GLuint tex;
