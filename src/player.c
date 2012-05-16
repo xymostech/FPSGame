@@ -57,11 +57,11 @@ void player_selfupdate(struct player *player) {
 	player->xang += x / 200.0;
 	player->yang -= y / 200.0;
 
-	if (player->yang < 0) {
-		player->yang = 0;
+	if (player->yang < 0.01) {
+		player->yang = 0.01;
 	}
-	if (player->yang > M_PI) {
-		player->yang = M_PI;
+	if (player->yang > M_PI-0.01) {
+		player->yang = M_PI-0.01;
 	}
 
 	if (player->on_ground && key_just_pressed(' ')) {
