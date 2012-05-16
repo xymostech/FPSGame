@@ -65,7 +65,9 @@ struct font* font_load(char *filename) {
 	int char_size = max_height * max_width;
 	int row_size = max_width;
 
-	unsigned char *buffer = malloc(buffer_height * buffer_width);
+	unsigned char *buffer = malloc(buffer_height * buffer_width * 2);
+
+	font->char_data = malloc(sizeof(*font->char_data)*strlen(chars));
 
 	chr = chars;
 	int chr_num = 0;
@@ -77,11 +79,25 @@ struct font* font_load(char *filename) {
 			fprintf(stderr, "Error: Font %s can't load glyph: '%c'\n", filename, *chr);
 			continue;
 		}
-		int i;
+
+		int i, j;
 		for (i=0; i<face->glyph->bitmap.rows; ++i) {
-			memcpy(buffer + chr_num * buffer_width * max_height + i * buffer_width,
-			       face->glyph->bitmap.buffer + i * face->glyph->bitmap.width, face->glyph->bitmap.width);
+			unsigned char *set_buffer = buffer +
+			    2 * chr_num * buffer_width * max_height +
+			    i * buffer_width * 2;
+			for (j=0; j<face->glyph->bitmap.width; ++j) {
+				int val = face->glyph->bitmap.buffer
+				              [i*face->glyph->bitmap.width+j];
+				*(set_buffer++) = 255;
+				*(set_buffer++) = val;
+			}
 		}
+
+		font->char_data[chr_num].width = face->glyph->metrics.width/64;
+		font->char_data[chr_num].height = face->glyph->metrics.height/64;
+		font->char_data[chr_num].bearing_x = face->glyph->metrics.horiBearingX/64;
+		font->char_data[chr_num].bearing_y = face->glyph->metrics.horiBearingY/64;
+		font->char_data[chr_num].advance = face->glyph->metrics.horiAdvance/64;
 
 		chr++;
 		chr_num++;
@@ -93,10 +109,10 @@ struct font* font_load(char *filename) {
 
 	glBindTexture(GL_TEXTURE_2D, texture);
 
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, 1, buffer_width, buffer_height, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, buffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE8_ALPHA8, buffer_width, buffer_height, 0, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, buffer);
 
 	free(buffer);
 
@@ -112,10 +128,12 @@ struct font* font_load(char *filename) {
 }
 
 void font_delete(struct font *font) {
+	glDeleteTextures(1, &font->tex);
+	free(font->char_data);
 	free(font);
 }
 
-void font_draw(struct font *font, char *string) {
+void font_draw(struct font *font, char *string, int size) {
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, font->tex);
 
@@ -124,49 +142,52 @@ void font_draw(struct font *font, char *string) {
 	glScalef(1.0/font->buffer_width, 1.0/font->buffer_height, 1);
 	glMatrixMode(GL_MODELVIEW);
 
-	glColor3f(1, 1, 1);
+	glColor3f(0, 0, 0);
 
 	glPushMatrix();
 
 	while (*string) {
 		int chr = *string - 'A';
 
-		glTranslatef(100, 0, 0);
+		struct font_char *char_data = &font->char_data[chr];
 
-		if (*string == ' ') {
-			++string;
-			continue;
-		}
+		glPushMatrix();
 
+		glTranslatef(char_data->bearing_x, char_data->bearing_y, 0);
 		glMatrixMode(GL_TEXTURE);
 		glPushMatrix();
 		glTranslatef(0, chr * font->char_height, 0);
 		glMatrixMode(GL_MODELVIEW);
 
-
 		glBegin(GL_QUADS);
-			glTexCoord2i(0, font->char_height);
-			glVertex2f(-50, -50);
+			glTexCoord2i(0, char_data->height);
+			glVertex2f(0, -char_data->height);
 
-			glTexCoord2i(font->char_width, font->char_height);
-			glVertex2f( 50, -50);
+			glTexCoord2i(char_data->width, char_data->height);
+			glVertex2f( char_data->width, -char_data->height);
 
-			glTexCoord2i(font->char_width, 0);
-			glVertex2f( 50,  50);
+			glTexCoord2i(char_data->width, 0);
+			glVertex2f( char_data->width,  0);
 
 			glTexCoord2i(0, 0);
-			glVertex2f(-50,  50);
+			glVertex2f(0,  0);
 		glEnd();
 
 		glMatrixMode(GL_TEXTURE);
 		glPopMatrix();
 		glMatrixMode(GL_MODELVIEW);
+		glPopMatrix();
+
+		glTranslatef(char_data->advance, 0, 0);
 
 		++string;
 	}
 
 	glPopMatrix();
 
+	glMatrixMode(GL_TEXTURE);
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
 
 	glDisable(GL_TEXTURE_2D);
 }
