@@ -138,13 +138,16 @@ void font_draw(struct font *font, char *string, int size) {
 	glBindTexture(GL_TEXTURE_2D, font->tex);
 
 	glMatrixMode(GL_TEXTURE);
-	glLoadIdentity();
+	glPushMatrix();
+	/* scale texture so pixels can be addressed correctly */
 	glScalef(1.0/font->buffer_width, 1.0/font->buffer_height, 1);
 	glMatrixMode(GL_MODELVIEW);
 
 	glColor3f(0, 0, 0);
 
 	glPushMatrix();
+	/* scale so that the font is drawn approximately size pixels tall */
+	glScalef(size/(float)font->char_height, size/(float)font->char_height, 1);
 
 	while (*string) {
 		int chr = *string - 'A';
@@ -186,7 +189,7 @@ void font_draw(struct font *font, char *string, int size) {
 	glPopMatrix();
 
 	glMatrixMode(GL_TEXTURE);
-	glLoadIdentity();
+	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
 
 	glDisable(GL_TEXTURE_2D);
