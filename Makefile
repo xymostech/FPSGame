@@ -13,7 +13,8 @@ OBJ=main.o\
     model.o\
     polygon.o\
     hud.o\
-    font.o
+    font.o\
+    texture.o
 HEAD=$(wildcard src/*.h)
 
 PROD=FPS
