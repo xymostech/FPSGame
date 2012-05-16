@@ -16,6 +16,8 @@ void init() {
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glfwDisable(GLFW_MOUSE_CURSOR);
 
@@ -44,7 +46,7 @@ void update() {
 int main(int argc, char const **argv) {
 	glfwInit();
 
-	glfwOpenWindow(800, 600, 0, 0, 0, 0, 16, 0, GLFW_WINDOW);
+	glfwOpenWindow(800, 600, 8, 8, 8, 8, 16, 0, GLFW_WINDOW);
 
 	glfwSetWindowSizeCallback(set_window_size);
 	glfwSetKeyCallback(set_key);
