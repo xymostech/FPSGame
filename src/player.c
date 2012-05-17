@@ -27,7 +27,7 @@ void player_delete(struct player *player) {
 	free(player);
 }
 
-void player_selfupdate(struct player *player) {
+void player_selfupdate(struct player *player, struct world *world) {
 	float xvel=0, yvel=0, dist;
 	if (glfwGetKey('W')) {
 		xvel += 0.05*cos(player->xang);
@@ -66,6 +66,30 @@ void player_selfupdate(struct player *player) {
 
 	if (player->on_ground && key_just_pressed(' ')) {
 		player->yvel += 0.1;
+	}
+
+	struct vector start = vect(player->x, player->y + 0.4, player->z);
+	struct vector dir = vect(cos(player->xang)*sin(player->yang),
+	                         cos(player->yang),
+	                         sin(player->xang)*sin(player->yang));
+	
+	struct world_object *hit_object = NULL, *object = world->objects;
+	float best_dist = -1, test_dist;
+	while (object) {
+		if (object->does_hit) {
+			test_dist = world_object_hittest(object, start, dir);
+			if (best_dist < 0 && test_dist > 0) {
+				best_dist = test_dist;
+				hit_object = object;
+			} else if (test_dist > 0 && test_dist < best_dist) {
+				best_dist = test_dist;
+				hit_object = object;
+			}
+		}
+		object = object->next;
+	}
+	if (hit_object != NULL) {
+		world_object_dohit(hit_object);
 	}
 }
 
