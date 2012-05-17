@@ -29,7 +29,7 @@ void world_object_draw(struct world_object *object) {
 struct world_object* world_floor_init(float x1, float y1, float x2, float y2) {
 	struct world_floor *floor = malloc(sizeof(*floor));
 
-	floor->type = WORLD_FLOOR;
+	floor->obj.type = WORLD_FLOOR;
 
 	floor->x1 = x1;
 	floor->y1 = y1;
@@ -57,7 +57,7 @@ void world_floor_draw(struct world_floor *floor) {
 struct world_object* world_model_init(float x, float y, float z, char *file) {
 	struct world_model *model = malloc(sizeof(*model));
 
-	model->type = WORLD_MODEL;
+	model->obj.type = WORLD_MODEL;
 
 	model->x = x;
 	model->y = y;

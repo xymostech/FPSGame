@@ -20,8 +20,7 @@ void world_object_delete(struct world_object*);
 void world_object_draw(struct world_object*);
 
 struct world_floor {
-	enum world_object_type type;
-	struct world_object *next;
+	struct world_object obj;
 
 	float x1, y1, x2, y2;
 };
@@ -31,8 +30,7 @@ void world_floor_delete(struct world_floor*);
 void world_floor_draw(struct world_floor*);
 
 struct world_model {
-	enum world_object_type type;
-	struct world_object *next;
+	struct world_object obj;
 
 	float x, y, z;
 	struct model *model;
