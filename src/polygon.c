@@ -86,3 +86,27 @@ void polygon_draw(struct polygon *poly) {
 	}
 	glEnd();
 }
+
+float polygon_hittest(struct polygon *poly, struct vector from, struct vector dir) {
+	struct vector s = vector_sub(from, poly->a);
+	float t = -vector_dot(poly->n, s)/vector_dot(poly->n, dir);
+
+	if (t < 0) {
+		return -1;
+	}
+
+	struct vector p = vector_add(vector_mult(dir, t), s);
+
+	float dot_up = vector_dot(p, poly->u), dot_vp = vector_dot(p, poly->v);
+
+	float u_d = (poly->dot_vv * dot_up -
+	             poly->dot_uv * dot_vp) * poly->inv_denom;
+	float v_d = (poly->dot_uu * dot_vp -
+	             poly->dot_uv * dot_up) * poly->inv_denom;
+
+	if (u_d > 0 && v_d > 0 && u_d + v_d < 1) {
+		return vector_len(dir) * t;
+	} else {
+		return -1;
+	}
+}

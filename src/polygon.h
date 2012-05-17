@@ -36,4 +36,6 @@ void polygon_setup_hittest(struct polygon*);
 
 void polygon_draw(struct polygon*);
 
+float polygon_hittest(struct polygon*, struct vector, struct vector);
+
 #endif /* POLYGON_H */
