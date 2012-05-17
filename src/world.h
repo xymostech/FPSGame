@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #include "model.h"
+#include "vector.h"
 
 enum world_object_type {
 	WORLD_FLOOR,
@@ -19,6 +20,7 @@ struct world_object {
 
 void world_object_delete(struct world_object*);
 void world_object_draw(struct world_object*);
+float world_object_hittest(struct world_object*, struct vector, struct vector);
 
 struct world_floor {
 	struct world_object obj;
@@ -40,6 +42,7 @@ struct world_model {
 struct world_object* world_model_init(float, float, float, char*);
 void world_model_delete(struct world_model*);
 void world_model_draw(struct world_model*);
+float world_model_hittest(struct world_model*, struct vector, struct vector);
 
 struct world {
 	struct world_object *objects;
