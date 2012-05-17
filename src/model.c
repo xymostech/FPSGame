@@ -48,7 +48,7 @@ struct model* model_load(char *filename) {
 			rest = strtok_r(NULL, "\n", &save);
 			float x, y, z;
 			sscanf(rest, "%f %f %f", &x, &y, &z);
-			struct point *point = point_init(x, y, z);
+			struct point *point = point_init(x, y, z, 0, 0, 0, 0, 0);
 			point->next = points;
 			points = point;
 			num_points++;

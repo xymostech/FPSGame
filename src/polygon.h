@@ -8,11 +8,13 @@
 
 struct point {
 	float x, y, z;
+	float tu, tv;
+	float nx, ny, nz;
 
 	struct point *next;
 };
 
-struct point* point_init(float, float, float);
+struct point* point_init(float, float, float, float, float, float, float, float);
 struct point* point_copy(struct point*);
 void point_delete(struct point*);
 

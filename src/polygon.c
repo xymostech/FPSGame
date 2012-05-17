@@ -1,17 +1,28 @@
 #include "polygon.h"
 
-struct point* point_init(float x, float y, float z) {
+struct point* point_init(float x, float y, float z,
+                         float tu, float tv,
+                         float nx, float ny, float nz) {
 	struct point* point = malloc(sizeof(*point));
 
 	point->x = x;
 	point->y = y;
 	point->z = z;
 
+	point->tu = tu;
+	point->tv = tv;
+
+	point->nx = nx;
+	point->ny = ny;
+	point->nz = nz;
+
 	return point;
 }
 
 struct point* point_copy(struct point *point) {
-	return point_init(point->x, point->y, point->z);
+	return point_init(point->x, point->y, point->z,
+	                  point->tu, point->tv,
+	                  point->nx, point->ny, point->nz);
 }
 
 void point_delete(struct point *point) {
