@@ -104,3 +104,18 @@ void model_draw(struct model *model) {
 		poly = poly->next;
 	}
 }
+
+float model_hittest(struct model *model, struct vector start, struct vector dir) {
+	struct polygon *poly = model->polygons;
+	float best = -1, test;
+	while (poly) {
+		test = polygon_hittest(poly, start, dir);
+		if (best < 0) {
+			best = test;
+		} else if (test > 0 && test < best) {
+			best = test;
+		}
+		poly = poly->next;
+	}
+	return best;
+}
