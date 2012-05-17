@@ -100,6 +100,14 @@ void world_model_draw(struct world_model *model) {
 
 	glTranslatef(model->x, model->y, model->z);
 
+	if (model->was_hit) {
+		glColor3f(1, 0, 0);
+	} else {
+		glColor3f(1, 1, 1);
+	}
+
+	model->was_hit = 0;
+
 	model_draw(model->model);
 
 	glPopMatrix();
@@ -121,6 +129,8 @@ struct world* world_init() {
 
 	world_add_object(world, world_floor_init(-5, -5, 5, 5));
 	world_add_object(world, world_model_init(0, 0.5, 0, "res/cube.obj"));
+	world_add_object(world, world_model_init(2, 0.5, 0, "res/cube.obj"));
+	world_add_object(world, world_model_init(0, 0.5, 2, "res/cube.obj"));
 
 	return world;
 }
