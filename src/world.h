@@ -6,6 +6,7 @@
 
 #include "model.h"
 #include "vector.h"
+#include "texture.h"
 
 enum world_object_type {
 	WORLD_FLOOR,
@@ -27,6 +28,8 @@ struct world_floor {
 	struct world_object obj;
 
 	float x1, y1, x2, y2;
+
+	struct texture *texture;
 };
 
 struct world_object* world_floor_init(float, float, float, float);
