@@ -1,13 +1,34 @@
 #include "model.h"
 
-void parse_vertex(char *str, int *vert) {
+void parse_vertex(char *str, int *vert, int *tvert, int *nvert) {
 	char *token, *save;
-	token = strtok_r(str, "/", &save);
-	if (token == NULL) {
-		*vert = 0;
-	} else {
-		*vert = atoi(token);
+	token = save = str;
+	while (*save != '/' && *save) {
+		++save;
 	}
+	if (!*save) {
+		*vert = atoi(token);
+		*tvert = 0;
+		*nvert = 0;
+		return;
+	}
+	*save = 0;
+	*vert = atoi(token);
+	token = save+1;
+	while (*save != '/' && *save) {
+		++save;
+	}
+	if (!*save) {
+		*tvert = atoi(token);
+		*nvert = 0;
+		return;
+	}
+	*tvert = atoi(token);
+	token = save+1;
+	while (*save) {
+		++save;
+	}
+	*nvert = atoi(token);
 }
 
 struct point* lookup_point(struct point *points, int num_points, int point) {
@@ -34,6 +55,10 @@ struct model* model_load(char *filename) {
 
 	struct point *points = NULL;
 	int num_points = 0;
+	struct point *tex_points = NULL;
+	int num_tex_points = 0;
+	struct point *norm_points = NULL;
+	int num_norm_points = 0;
 
 	char *line = malloc(0);
 	size_t size = 0;
@@ -52,17 +77,53 @@ struct model* model_load(char *filename) {
 			point->next = points;
 			points = point;
 			num_points++;
+		} else if (strcmp(token, "vt") == 0) {
+			rest = strtok_r(NULL, "\n", &save);
+			float x, y;
+			sscanf(rest, "%f %f", &x, &y);
+			struct point *point = point_init(0, 0, 0, x, y, 0, 0, 0);
+			point->next = tex_points;
+			tex_points = point;
+			num_tex_points++;
+		} else if (strcmp(token, "vn") == 0) {
+			rest = strtok_r(NULL, "\n", &save);
+			float x, y, z;
+			sscanf(rest, "%f %f %f", &x, &y, &z);
+			struct point *point = point_init(0, 0, 0, 0, 0, x, y, z);
+			point->next = norm_points;
+			norm_points = point;
+			num_norm_points++;
 		} else if (strcmp(token, "f") == 0) {
 			struct polygon *polygon = polygon_init();
 			token = strtok_r(NULL, " \t\n", &save);
 			int point_count = 0;
 			while (token) {
-				int v;
-				parse_vertex(token, &v);
+				int v, tv, nv;
+				parse_vertex(token, &v, &tv, &nv);
 				point_count++;
-				polygon_add_point(polygon,
-				                  lookup_point(points,
-				                  num_points, v));
+				struct point zero_point;
+				zero_point.x = 0;
+				zero_point.y = 0;
+				zero_point.z = 0;
+				zero_point.tu = 0;
+				zero_point.tv = 0;
+				zero_point.nx = 0;
+				zero_point.ny = 0;
+				zero_point.nz = 0;
+				struct point *ppoint = lookup_point(points, num_points, v);
+				struct point *tpoint = lookup_point(tex_points, num_tex_points, tv);
+				if (!tpoint) {
+					tpoint = &zero_point;
+				}
+				struct point *npoint = lookup_point(norm_points, num_norm_points, nv);
+				if (!npoint) {
+					npoint = &zero_point;
+				}
+				struct point *point =
+				      point_init(ppoint->x, ppoint->y, ppoint->z,
+				                 tpoint->tu, tpoint->tv,
+				                 npoint->nx, npoint->ny, npoint->nz);
+				polygon_add_point(polygon, point);
 				token = strtok_r(NULL, " \t\n", &save);
 			}
 			if (point_count == 3) {
@@ -80,6 +141,16 @@ struct model* model_load(char *filename) {
 		next = points->next;
 		point_delete(points);
 		points = next;
+	}
+	while (tex_points) {
+		next = tex_points->next;
+		point_delete(tex_points);
+		tex_points = next;
+	}
+	while (norm_points) {
+		next = norm_points->next;
+		point_delete(norm_points);
+		norm_points = next;
 	}
 
 	fclose(file);

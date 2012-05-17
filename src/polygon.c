@@ -52,9 +52,8 @@ void polygon_delete(struct polygon *poly) {
 }
 
 void polygon_add_point(struct polygon *poly, struct point *point) {
-	struct point *copy = point_copy(point);
-	copy->next = poly->points;
-	poly->points = copy;
+	point->next = poly->points;
+	poly->points = point;
 }
 
 void polygon_setup_hittest(struct polygon *poly) {
