@@ -55,13 +55,18 @@ struct model* model_load(char *filename) {
 		} else if (strcmp(token, "f") == 0) {
 			struct polygon *polygon = polygon_init();
 			token = strtok_r(NULL, " \t\n", &save);
+			int point_count = 0;
 			while (token) {
 				int v;
 				parse_vertex(token, &v);
+				point_count++;
 				polygon_add_point(polygon,
 				                  lookup_point(points,
 				                  num_points, v));
 				token = strtok_r(NULL, " \t\n", &save);
+			}
+			if (point_count == 3) {
+				polygon_setup_hittest(polygon);
 			}
 			polygon->next = model->polygons;
 			model->polygons = polygon;
