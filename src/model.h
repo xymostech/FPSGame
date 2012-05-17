@@ -8,9 +8,12 @@
 
 #include "polygon.h"
 #include "vector.h"
+#include "texture.h"
 
 struct model {
 	char *file;
+
+	struct texture *texture;
 
 	struct polygon *polygons;
 };

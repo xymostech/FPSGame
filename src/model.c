@@ -46,6 +46,7 @@ struct model* model_load(char *filename) {
 	struct model *model = malloc(sizeof(*model));
 
 	model->polygons = NULL;
+	model->texture = NULL;
 
 	FILE *file = fopen(filename, "r");
 
@@ -131,6 +132,9 @@ struct model* model_load(char *filename) {
 			}
 			polygon->next = model->polygons;
 			model->polygons = polygon;
+		} else if (strcmp(token, "usetex") == 0) {
+			rest = strtok_r(NULL, "\n", &save);
+			model->texture = texture_load(rest);
 		}
 		getline(&line, &size, file);
 	}
@@ -165,14 +169,22 @@ void model_delete(struct model *model) {
 		polygon_delete(poly);
 		poly = next_poly;
 	}
+	texture_delete(model->texture);
 	free(model);
 }
 
 void model_draw(struct model *model) {
+	if (model->texture) {
+		glEnable(GL_TEXTURE_2D);
+		texture_use(model->texture);
+	}
 	struct polygon *poly = model->polygons;
 	while (poly) {
 		polygon_draw(poly);
 		poly = poly->next;
+	}
+	if (model->texture) {
+		glDisable(GL_TEXTURE_2D);
 	}
 }
 
