@@ -14,6 +14,7 @@ enum world_object_type {
 struct world_object {
 	enum world_object_type type;
 	struct world_object *next;
+	int does_hit;
 };
 
 void world_object_delete(struct world_object*);

@@ -30,6 +30,7 @@ struct world_object* world_floor_init(float x1, float y1, float x2, float y2) {
 	struct world_floor *floor = malloc(sizeof(*floor));
 
 	floor->obj.type = WORLD_FLOOR;
+	floor->obj.does_hit = 0;
 
 	floor->x1 = x1;
 	floor->y1 = y1;
@@ -58,6 +59,7 @@ struct world_object* world_model_init(float x, float y, float z, char *file) {
 	struct world_model *model = malloc(sizeof(*model));
 
 	model->obj.type = WORLD_MODEL;
+	model->obj.does_hit = 1;
 
 	model->x = x;
 	model->y = y;
