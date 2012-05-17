@@ -36,6 +36,16 @@ float world_object_hittest(struct world_object *object, struct vector start, str
 	return -1;
 }
 
+void world_object_dohit(struct world_object *object) {
+	switch (object->type) {
+		case WORLD_MODEL:
+			world_model_dohit((struct world_model*)object);
+			break;
+		default:
+			break;
+	}
+}
+
 struct world_object* world_floor_init(float x1, float y1, float x2, float y2) {
 	struct world_floor *floor = malloc(sizeof(*floor));
 
@@ -98,6 +108,10 @@ void world_model_draw(struct world_model *model) {
 float world_model_hittest(struct world_model *model, struct vector start, struct vector dir) {
 	struct vector new_start = vector_sub(start, vect(model->x, model->y, model->z));
 	return model_hittest(model->model, new_start, dir);
+}
+
+void world_model_dohit(struct world_model *model) {
+	model->was_hit = 1;
 }
 
 struct world* world_init() {
