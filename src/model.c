@@ -37,8 +37,8 @@ struct model* model_load(char *filename) {
 
 	char *line = malloc(0);
 	size_t size = 0;
-	do {
-		getline(&line, &size, file);
+	getline(&line, &size, file);
+	while (!feof(file)) {
 		char *token, *save, *rest;
 		token = strtok_r(line, " \t\n", &save);
 		if (token == NULL) {
@@ -66,7 +66,8 @@ struct model* model_load(char *filename) {
 			polygon->next = model->polygons;
 			model->polygons = polygon;
 		}
-	} while (!feof(file));
+		getline(&line, &size, file);
+	}
 	free(line);
 
 	struct point *next;
