@@ -30,6 +30,7 @@ void point_delete(struct point *point) {
 }
 
 void point_draw(struct point *point) {
+	glTexCoord2f(point->tu, point->tv);
 	glVertex3f(point->x, point->y, point->z);
 }
 
