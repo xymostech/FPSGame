@@ -205,8 +205,6 @@ struct world* world_init() {
 	world_add_object(world, world_model_init(2, 0.5, 0, "res/cube.obj"));
 	world_add_object(world, world_model_init(0, 0.5, 2, "res/cube.obj"));
 
-	world_add_object(world, world_player_init(-5, 0, 5, "res/cube.obj"));
-
 	return world;
 }
 
