@@ -43,6 +43,39 @@ void server_connect(struct server *server) {
 	freeaddrinfo(info);
 
 	server_connect_packet(server);
+
+	fd_set master, test;
+	struct timeval tv;
+
+	tv.tv_sec = 1;
+	tv.tv_usec = 0;
+
+	FD_ZERO(&master);
+	FD_SET(server->socket, &master);
+
+	char buffer[1024];
+	int len;
+
+	while (1) {
+		test = master;
+		tv.tv_sec = 1;
+		tv.tv_usec = 0;
+		if (select(server->socket+1, &test, NULL, NULL, &tv) == -1) {
+			perror("select");
+			return;
+		}
+		if (FD_ISSET(server->socket, &test)) {
+			len = recvfrom(server->socket, buffer, 1024, 0, NULL, NULL);
+			if (len == 4) {
+				int type = data_unpack_int16(buffer);
+				if (type == 3) {
+					server->id = data_unpack_int16(buffer+2);
+					break;
+				}
+			}
+		}
+		server_connect_packet(server);
+	}
 }
 
 void server_sendpacket(struct server *server, unsigned char *packet, int len) {
