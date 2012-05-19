@@ -42,3 +42,7 @@ void server_connect(struct server *server) {
 
 	freeaddrinfo(info);
 }
+
+void server_sendpacket(struct server *server, unsigned char *packet, int len) {
+	sendto(server->socket, packet, len, 0, (struct sockaddr*)&server->addr, server->addrlen);
+}

@@ -18,12 +18,14 @@ struct server {
 	int id;
 
 	struct sockaddr_storage addr;
-	size_t addrlen;
+	socklen_t addrlen;
 };
 
 struct server* server_init();
 void server_delete(struct server*);
 
 void server_connect(struct server*);
+
+void server_sendpacket(struct server*, unsigned char*, int);
 
 #endif /* SERVER_H */
