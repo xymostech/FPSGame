@@ -41,6 +41,8 @@ void server_connect(struct server *server) {
 	server->addrlen = p->ai_addrlen;
 
 	freeaddrinfo(info);
+
+	server_connect_packet(server);
 }
 
 void server_sendpacket(struct server *server, unsigned char *packet, int len) {
@@ -49,4 +51,11 @@ void server_sendpacket(struct server *server, unsigned char *packet, int len) {
 
 void server_recvpacket(struct server *server, unsigned char *buffer, int *len) {
 	*len = recvfrom(server->socket, buffer, *len, 0, NULL, NULL);
+}
+
+void server_connect_packet(struct server *server) {
+	unsigned char packet[1];
+	packet[0] = 1;
+
+	server_sendpacket(server, packet, 1);
 }

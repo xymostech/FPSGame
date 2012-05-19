@@ -29,4 +29,6 @@ void server_connect(struct server*);
 void server_sendpacket(struct server*, unsigned char*, int);
 void server_recvpacket(struct server*, unsigned char*, int*);
 
+void server_connect_packet(struct server*);
+
 #endif /* SERVER_H */
