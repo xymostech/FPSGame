@@ -13,6 +13,8 @@ int *window_height() {
 void GLFWCALL set_window_size(int w, int h) {
 	*window_width() = w;
 	*window_height() = h;
+
+	glfwSetMousePos(*window_width()/2, *window_height()/2);
 	
 	window_set_perspective();
 }
