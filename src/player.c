@@ -73,9 +73,9 @@ void player_selfupdate(struct player *player, struct world *world) {
 	                         cos(player->yang),
 	                         sin(player->xang)*sin(player->yang));
 	
-	struct world_object *hit_object = NULL, *object = world->objects;
+	struct world_object *hit_object = NULL, *object = world->objects->next;
 	float best_dist = -1, test_dist;
-	while (object) {
+	while (object != world->objects) {
 		if (object->does_hit) {
 			test_dist = world_object_hittest(object, start, dir);
 			if (best_dist < 0 && test_dist > 0) {
@@ -99,8 +99,8 @@ void player_update(struct player *player, struct world *world) {
 	player->y += player->yvel;
 
 	int colliding = 0;
-	struct world_object *collide = NULL, *object = world->objects;
-	while (object) {
+	struct world_object *collide = NULL, *object = world->objects->next;
+	while (object != world->objects) {
 		if (object->type == WORLD_FLOOR) {
 			struct world_floor *floor = (struct world_floor*)object;
 			if (old_y > 0 && player->y < 0 &&

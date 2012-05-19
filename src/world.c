@@ -195,7 +195,10 @@ void world_player_dohit(struct world_player *player) {
 struct world* world_init() {
 	struct world *world = malloc(sizeof(*world));
 
-	world->objects = NULL;
+	world->objects = malloc(sizeof(*world->objects));
+
+	world->objects->next = world->objects;
+	world->objects->prev = world->objects;
 
 	world_add_object(world, world_floor_init(-5, -5, 5, 5));
 	world_add_object(world, world_model_init(0, 0.5, 0, "res/cube.obj"));
@@ -208,8 +211,8 @@ struct world* world_init() {
 }
 
 void world_delete(struct world *world) {
-	struct world_object *object = world->objects, *next;
-	while (object) {
+	struct world_object *object = world->objects->next, *next;
+	while (object != world->objects) {
 		next = object->next;
 		world_object_delete(object);
 		object = next;
@@ -218,13 +221,15 @@ void world_delete(struct world *world) {
 }
 
 void world_add_object(struct world *world, struct world_object *object) {
-	object->next = world->objects;
-	world->objects = object;
+	object->next = world->objects->next;
+	object->prev = world->objects;
+	world->objects->next->prev = object;
+	world->objects->next = object;
 }
 
 void world_draw(struct world *world) {
-	struct world_object *object = world->objects;
-	while (object) {
+	struct world_object *object = world->objects->next;
+	while (object != world->objects) {
 		world_object_draw(object);
 		object = object->next;
 	}

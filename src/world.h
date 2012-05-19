@@ -17,7 +17,7 @@ enum world_object_type {
 
 struct world_object {
 	enum world_object_type type;
-	struct world_object *next;
+	struct world_object *next, *prev;
 	int does_hit;
 };
 
