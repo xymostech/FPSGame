@@ -14,6 +14,11 @@
 
 struct server {
 	int socket;
+
+	int id;
+
+	struct sockaddr_storage addr;
+	size_t addrlen;
 };
 
 struct server* server_init();

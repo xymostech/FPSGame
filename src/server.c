@@ -36,4 +36,9 @@ void server_connect(struct server *server) {
 		fprintf(stderr, "Error making socket\n");
 		return;
 	}
+
+	memcpy(&server->addr, p->ai_addr, p->ai_addrlen);
+	server->addrlen = p->ai_addrlen;
+
+	freeaddrinfo(info);
 }
