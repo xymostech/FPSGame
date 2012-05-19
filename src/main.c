@@ -6,10 +6,12 @@
 #include "player.h"
 #include "world.h"
 #include "hud.h"
+#include "server.h"
 
 struct player *my_player;
 struct world *my_world;
 struct hud *my_hud;
+struct server *my_server;
 
 void init() {
 	glClearColor(0.1, 0.1, 0.1, 0);
@@ -24,12 +26,16 @@ void init() {
 	my_player = player_init();
 	my_world = world_init();
 	my_hud = hud_init();
+	my_server = server_init();
+
+	server_connect(my_server);
 }
 
 void terminate() {
 	player_delete(my_player);
 	world_delete(my_world);
 	hud_delete(my_hud);
+	server_delete(my_server);
 }
 
 void draw() {
