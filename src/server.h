@@ -27,5 +27,6 @@ void server_delete(struct server*);
 void server_connect(struct server*);
 
 void server_sendpacket(struct server*, unsigned char*, int);
+void server_recvpacket(struct server*, unsigned char*, int*);
 
 #endif /* SERVER_H */
