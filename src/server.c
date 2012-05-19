@@ -54,8 +54,8 @@ void server_recvpacket(struct server *server, unsigned char *buffer, int *len) {
 }
 
 void server_connect_packet(struct server *server) {
-	unsigned char packet[1];
-	packet[0] = 1;
+	unsigned char packet[2];
+	data_pack_int16(packet, 1);
 
-	server_sendpacket(server, packet, 1);
+	server_sendpacket(server, packet, 2);
 }
