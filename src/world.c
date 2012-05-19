@@ -8,6 +8,9 @@ void world_object_delete(struct world_object *object) {
 		case WORLD_MODEL:
 			world_model_delete((struct world_model*)object);
 			break;
+		case WORLD_PLAYER:
+			world_player_delete((struct world_player*)object);
+			break;
 		default:
 			break;
 	}
@@ -21,6 +24,9 @@ void world_object_draw(struct world_object *object) {
 		case WORLD_MODEL:
 			world_model_draw((struct world_model*)object);
 			break;
+		case WORLD_PLAYER:
+			world_player_draw((struct world_player*)object);
+			break;
 		default:
 			break;
 	}
@@ -30,6 +36,8 @@ float world_object_hittest(struct world_object *object, struct vector start, str
 	switch (object->type) {
 		case WORLD_MODEL:
 			return world_model_hittest((struct world_model*)object, start, dir);
+		case WORLD_PLAYER:
+			return world_player_hittest((struct world_player*)object, start, dir);
 		default:
 			break;
 	}
@@ -40,6 +48,9 @@ void world_object_dohit(struct world_object *object) {
 	switch (object->type) {
 		case WORLD_MODEL:
 			world_model_dohit((struct world_model*)object);
+			break;
+		case WORLD_PLAYER:
+			world_player_dohit((struct world_player*)object);
 			break;
 		default:
 			break;
@@ -132,6 +143,55 @@ void world_model_dohit(struct world_model *model) {
 	model->was_hit = 1;
 }
 
+struct world_object* world_player_init(float x, float y, float z, char *file) {
+	struct world_player *player = malloc(sizeof(*player));
+
+	player->obj.type = WORLD_PLAYER;
+	player->obj.does_hit = 1;
+
+	player->model = model_load(file);
+	player->player = player_init();
+	
+	player->player->x = x;
+	player->player->y = y;
+	player->player->z = z;
+
+	return (struct world_object*)player;
+}
+
+void world_player_delete(struct world_player *player) {
+	model_delete(player->model);
+	player_delete(player->player);
+	free(player);
+}
+
+void world_player_draw(struct world_player *player) {
+	glPushMatrix();
+
+	glTranslatef(player->player->x, player->player->y, player->player->z);
+
+	if (player->was_hit) {
+		glColor3f(1, 0, 0);
+	} else {
+		glColor3f(1, 1, 1);
+	}
+
+	player->was_hit = 0;
+
+	model_draw(player->model);
+
+	glPopMatrix();
+}
+
+float world_player_hittest(struct world_player *player, struct vector start, struct vector dir) {
+	struct vector new_start = vector_sub(start, vect(player->player->x, player->player->y, player->player->z));
+	return model_hittest(player->model, new_start, dir);
+}
+
+void world_player_dohit(struct world_player *player) {
+	player->was_hit = 1;
+}
+
 struct world* world_init() {
 	struct world *world = malloc(sizeof(*world));
 
@@ -141,6 +201,8 @@ struct world* world_init() {
 	world_add_object(world, world_model_init(0, 0.5, 0, "res/cube.obj"));
 	world_add_object(world, world_model_init(2, 0.5, 0, "res/cube.obj"));
 	world_add_object(world, world_model_init(0, 0.5, 2, "res/cube.obj"));
+
+	world_add_object(world, world_player_init(-5, 0, 5, "res/cube.obj"));
 
 	return world;
 }
