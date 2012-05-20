@@ -12,7 +12,7 @@ void data_pack_int16(unsigned char *buffer, int16_t i) {
 	*buffer++ = i;
 }
 
-void data_pack_float32(unsigned char *buffer, float f) {
+void data_pack_float32(unsigned char *buffer, double f) {
 	int32_t i;
 
 	float fnorm;
@@ -67,7 +67,7 @@ float data_unpack_float32(unsigned char *buffer) {
 	while(shift > 0) { result *= 2.0; shift--; }
 	while(shift < 0) { result /= 2.0; shift++; }
 
-	result *= (i>>31)&1? -1.0: 1.0;
+	result *= ((i>>31)&1)?(-1.0):(1.0);
 
 	return result;
 }
