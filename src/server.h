@@ -32,6 +32,6 @@ void server_recvpacket(struct server*, unsigned char*, int*);
 
 void server_connect_packet(struct server*);
 
-void server_handle_updates(struct server*);
+void server_handle_updates(struct server*, struct world*);
 
 #endif /* SERVER_H */

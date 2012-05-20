@@ -47,7 +47,7 @@ void draw() {
 void update() {
 	player_selfupdate(my_player, my_world);
 	player_update(my_player, my_world);
-	server_handle_updates(my_server);
+	server_handle_updates(my_server, my_world);
 }
 
 int main(int argc, char const **argv) {

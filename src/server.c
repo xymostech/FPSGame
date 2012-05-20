@@ -95,7 +95,7 @@ void server_connect_packet(struct server *server) {
 	server_sendpacket(server, packet, 2);
 }
 
-void server_handle_updates(struct server *server) {
+void server_handle_updates(struct server *server, struct world *world) {
 	char buffer[1024];
 	while (1) {
 		int len = recvfrom(server->socket, buffer, 1024, 0, NULL, NULL);
