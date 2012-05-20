@@ -1,5 +1,6 @@
 #include "player.h"
 #include "world.h"
+#include "server.h"
 
 struct player* player_init(int id) {
 	struct player *player = malloc(sizeof(*player));
@@ -69,6 +70,8 @@ void player_selfupdate(struct player *player, struct world *world, struct server
 	if (player->on_ground && key_just_pressed(' ')) {
 		player->yvel += 0.1;
 	}
+
+	server_position_update(server, player);
 
 	struct vector start = vect(player->x, player->y + 0.4, player->z);
 	struct vector dir = vect(cos(player->xang)*sin(player->yang),

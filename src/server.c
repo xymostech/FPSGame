@@ -86,7 +86,7 @@ void server_disconnect(struct server *server) {
 	server_disconnect_packet(server);
 }
 
-void server_position_udpate(struct server *server, struct player *player) {
+void server_position_update(struct server *server, struct player *player) {
 	server_position_packet(server, player);
 }
 
