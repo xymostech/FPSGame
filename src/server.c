@@ -37,6 +37,8 @@ void server_connect(struct server *server) {
 		return;
 	}
 
+	fcntl(server->socket, F_SETFL, O_NONBLOCK);
+
 	memcpy(&server->addr, p->ai_addr, p->ai_addrlen);
 	server->addrlen = p->ai_addrlen;
 
