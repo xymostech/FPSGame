@@ -143,14 +143,14 @@ void world_model_dohit(struct world_model *model) {
 	model->was_hit = 1;
 }
 
-struct world_object* world_player_init(float x, float y, float z, char *file) {
+struct world_object* world_player_init(int id, float x, float y, float z, char *file) {
 	struct world_player *player = malloc(sizeof(*player));
 
 	player->obj.type = WORLD_PLAYER;
 	player->obj.does_hit = 1;
 
 	player->model = model_load(file);
-	player->player = player_init();
+	player->player = player_init(id);
 	
 	player->player->x = x;
 	player->player->y = y;

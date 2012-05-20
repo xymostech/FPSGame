@@ -23,7 +23,7 @@ void init() {
 
 	glfwDisable(GLFW_MOUSE_CURSOR);
 
-	my_player = player_init();
+	my_player = player_init(-1);
 	my_world = world_init();
 	my_hud = hud_init();
 	my_server = server_init();

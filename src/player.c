@@ -1,8 +1,10 @@
 #include "player.h"
 #include "world.h"
 
-struct player* player_init() {
+struct player* player_init(int id) {
 	struct player *player = malloc(sizeof(*player));
+
+	player->id = id;
 
 	player->x = 0;
 	player->y = 0.001;

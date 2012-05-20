@@ -62,7 +62,7 @@ struct world_player {
 	int was_hit;
 };
 
-struct world_object* world_player_init(float, float, float, char*);
+struct world_object* world_player_init(int, float, float, float, char*);
 void world_player_delete(struct world_player*);
 void world_player_draw(struct world_player*);
 float world_player_hittest(struct world_player*, struct vector, struct vector);

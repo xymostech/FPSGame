@@ -11,6 +11,8 @@
 struct world;
 
 struct player {
+	int id;
+
 	float x, y, z;
 	float xang, yang;
 
@@ -20,7 +22,7 @@ struct player {
 	struct cam cam;
 };
 
-struct player* player_init();
+struct player* player_init(int);
 void player_delete(struct player*);
 
 void player_selfupdate(struct player*, struct world*);
