@@ -13,6 +13,8 @@
 #include <netdb.h>
 #include <fcntl.h>
 
+#include "world.h"
+
 struct server {
 	int socket;
 

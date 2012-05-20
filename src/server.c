@@ -105,7 +105,7 @@ void server_handle_updates(struct server *server, struct world *world) {
 		int type = data_unpack_int16(buffer);
 		if (type == 1) {
 			int id = data_unpack_int16(buffer+2);
-			printf("Got new player: %d\n", id);
+			world_add_object(world, world_player_init(id, 0, 0, 0, "res/cube.obj"));
 		}
 	}
 }
