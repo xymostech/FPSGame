@@ -29,7 +29,7 @@ void player_delete(struct player *player) {
 	free(player);
 }
 
-void player_selfupdate(struct player *player, struct world *world) {
+void player_selfupdate(struct player *player, struct world *world, struct server *server) {
 	float xvel=0, yvel=0, dist;
 	if (glfwGetKey('W')) {
 		xvel += 0.05*cos(player->xang);

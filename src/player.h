@@ -8,6 +8,8 @@
 #include "key.h"
 #include "vector.h"
 
+#include "server.h"
+
 struct world;
 
 struct player {
@@ -25,7 +27,7 @@ struct player {
 struct player* player_init(int);
 void player_delete(struct player*);
 
-void player_selfupdate(struct player*, struct world*);
+void player_selfupdate(struct player*, struct world*, struct server*);
 void player_update(struct player*, struct world*);
 
 #endif /* PLAYER_H */
