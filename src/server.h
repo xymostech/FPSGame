@@ -11,6 +11,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <fcntl.h>
 
 struct server {
 	int socket;
@@ -30,5 +31,7 @@ void server_sendpacket(struct server*, unsigned char*, int);
 void server_recvpacket(struct server*, unsigned char*, int*);
 
 void server_connect_packet(struct server*);
+
+void server_handle_updates(struct server*);
 
 #endif /* SERVER_H */

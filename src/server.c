@@ -94,3 +94,18 @@ void server_connect_packet(struct server *server) {
 
 	server_sendpacket(server, packet, 2);
 }
+
+void server_handle_updates(struct server *server) {
+	char buffer[1024];
+	while (1) {
+		int len = recvfrom(server->socket, buffer, 1024, 0, NULL, NULL);
+		if (len == -1) {
+			break;
+		}
+		int type = data_unpack_int16(buffer);
+		if (type == 1) {
+			int id = data_unpack_int16(buffer+2);
+			printf("Got new player: %d\n", id);
+		}
+	}
+}
