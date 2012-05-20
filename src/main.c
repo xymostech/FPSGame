@@ -35,6 +35,8 @@ void terminate() {
 	player_delete(my_player);
 	world_delete(my_world);
 	hud_delete(my_hud);
+	
+	server_disconnect(my_server);
 	server_delete(my_server);
 }
 
