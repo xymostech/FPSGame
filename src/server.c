@@ -80,6 +80,10 @@ void server_connect(struct server *server) {
 	}
 }
 
+void server_disconnect(struct server *server) {
+	server_disconnect_packet(server);
+}
+
 void server_sendpacket(struct server *server, unsigned char *packet, int len) {
 	sendto(server->socket, packet, len, 0, (struct sockaddr*)&server->addr, server->addrlen);
 }
@@ -93,6 +97,14 @@ void server_connect_packet(struct server *server) {
 	data_pack_int16(packet, 1);
 
 	server_sendpacket(server, packet, 2);
+}
+
+void server_disconnect_packet(struct server *server) {
+	unsigned char packet[4];
+	data_pack_int16(packet, 2);
+	data_pack_int16(packet+2, server->id);
+
+	server_sendpacket(server, packet, 4);
 }
 
 void server_handle_updates(struct server *server, struct world *world) {
