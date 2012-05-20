@@ -1,5 +1,7 @@
 #include "server.h"
 
+#include "player.h"
+
 struct server* server_init() {
 	struct server *server = malloc(sizeof(*server));
 
@@ -84,6 +86,10 @@ void server_disconnect(struct server *server) {
 	server_disconnect_packet(server);
 }
 
+void server_position_udpate(struct server *server, struct player *player) {
+	server_position_packet(server, player);
+}
+
 void server_sendpacket(struct server *server, unsigned char *packet, int len) {
 	sendto(server->socket, packet, len, 0, (struct sockaddr*)&server->addr, server->addrlen);
 }
@@ -105,6 +111,19 @@ void server_disconnect_packet(struct server *server) {
 	data_pack_int16(packet+2, server->id);
 
 	server_sendpacket(server, packet, 4);
+}
+
+void server_position_packet(struct server *server, struct player *player) {
+	unsigned char packet[20];
+
+	data_pack_int16(packet, 5);
+	data_pack_int16(packet+2, server->id);
+	data_pack_float32(packet+4, player->x);
+	data_pack_float32(packet+8, player->y);
+	data_pack_float32(packet+12, player->z);
+	data_pack_float32(packet+16, player->yvel);
+
+	server_sendpacket(server, packet, 20);
 }
 
 void server_handle_updates(struct server *server, struct world *world) {
