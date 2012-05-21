@@ -50,13 +50,16 @@ int16_t data_unpack_int16(unsigned char *buffer) {
 	       (buffer[1]);
 }
 
-float data_unpack_float32(unsigned char *buffer) {
+void data_unpack_float32(unsigned char *buffer, float *f) {
 	int32_t i = data_unpack_int32(buffer);
 	float result;
 	long shift;
 	unsigned bias;
 
-	if (i == 0) return 0.0;
+	if (i == 0) {
+		*f = 0.0;
+		return;
+	}
 
 	result = (i&((1LL<<23)-1));
 	result /= (1LL<<23);
@@ -67,7 +70,7 @@ float data_unpack_float32(unsigned char *buffer) {
 	while(shift > 0) { result *= 2.0; shift--; }
 	while(shift < 0) { result /= 2.0; shift++; }
 
-	result *= ((i>>31)&1)?(-1.0):(1.0);
+	result *= (i>>31)&1?(-1.0):(1.0);
 
-	return result;
+	*f = result;
 }

@@ -10,6 +10,6 @@ void data_pack_float32(unsigned char*, double);
 
 int32_t data_unpack_int32(unsigned char*);
 int16_t data_unpack_int16(unsigned char*);
-float   data_unpack_float32(unsigned char*);
+void   data_unpack_float32(unsigned char*, float*);
 
 #endif /* DATA_H */
