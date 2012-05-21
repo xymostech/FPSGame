@@ -2,6 +2,8 @@
 
 #include "player.h"
 
+#include "world.h"
+
 struct server* server_init() {
 	struct server *server = malloc(sizeof(*server));
 
@@ -136,7 +138,27 @@ void server_handle_updates(struct server *server, struct world *world) {
 		int type = data_unpack_int16(buffer);
 		if (type == 1) {
 			int id = data_unpack_int16(buffer+2);
-			world_add_object(world, world_player_init(id, 0, 0, 0, "res/cube.obj"));
+			world_add_object(world, world_player_init(id, 0.0, 0.0, 0.0, "res/cube.obj"));
+		} else if (type == 5) {
+			int id = data_unpack_int16(buffer+2);
+			float x, y, z, yvel;
+			data_unpack_float32(buffer+4, &x);
+			data_unpack_float32(buffer+8, &y);
+			data_unpack_float32(buffer+12, &z);
+			data_unpack_float32(buffer+16, &yvel);
+			struct world_object *object = world->objects->next;
+			while (object != world->objects) {
+				if (object->type == WORLD_PLAYER) {
+					struct world_player *player = (struct world_player*)object;
+					if (player->player->id == id) {
+						player->player->x = x;
+						player->player->y = y;
+						player->player->z = z;
+						player->player->yvel = yvel;
+					}
+				}
+				object = object->next;
+			}
 		}
 	}
 }
