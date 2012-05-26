@@ -1,7 +1,18 @@
 CC=gcc
 
 CFLAGS+=-Isrc/ `freetype-config --cflags`
-LIBS+=`freetype-config --libs` -lpng -lz -lglfw
+
+UNAME := $(shell $(CC) -dumpmachine 2>&1 | grep -E -o "linux|darwin|win")
+
+LIBS=-lpng -lz -lglfw -lm `freetype-config --libs`
+
+ifeq ($(UNAME), linux)
+	LIBS+=-lGL -lGLU
+else ifeq ($(UNAME), darwin)
+	LIBS+=-framework OpenGL -framework Cocoa
+else
+	$(error Cannot build on your OS)
+endif
 
 OBJ=main.o\
     key.o\
@@ -22,40 +33,14 @@ HEAD=$(wildcard src/*.h)
 
 PROD=FPS
 
-.PHONY: none mac linux
-none:
-	@echo "Use 'make mac' or 'make linux' to build"
+BOBJ=$(addprefix build/,$(OBJ))
+
+$(PROD): $(BOBJ)
+	$(CC) -o $@ $^ $(LIBS)
+
+build/%.o: src/%.c $(HEAD)
+	$(CC) -c -o $@ $< $(CFLAGS)
 
 .PHONY: clean
 clean:
-	rm -rf $(PROD)-* build/mac/* build/linux/*
-
-#===== MAC BUILD =====#
-
-MACOBJ=$(addprefix build/mac/,$(OBJ))
-
-MACCFLAGS=$(CFLAGS)
-MACLIBS=$(LIBS) -framework OpenGL -framework Cocoa -lm
-
-mac: $(PROD)-mac
-
-$(PROD)-mac: $(MACOBJ)
-	$(CC) -o $@ $^ $(MACLIBS)
-
-build/mac/%.o: src/%.c $(HEAD)
-	$(CC) -c -o $@ $< $(MACCFLAGS)
-
-#===== LINUX BUILD =====#
-
-LINOBJ=$(addprefix build/linux/,$(OBJ))
-
-LINCFLAGS=$(CFLAGS)
-LINLIBS=$(LIBS) -lGL -lGLU -lm
-
-linux: $(PROD)-linux
-
-$(PROD)-linux: $(LINOBJ)
-	$(CC) -o $@ $^ $(LINLIBS)
-
-build/linux/%.o: src/%.c $(HEAD)
-	$(CC) -c -o $@ $< $(LINCFLAGS)
+	rm -rf $(PROD) build/*
