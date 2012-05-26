@@ -1,7 +1,7 @@
 CC=gcc
 
 CFLAGS+=-Isrc/ `freetype-config --cflags`
-LFLAGS+=`freetype-config --libs` -lpng -lz
+LFLAGS+=`freetype-config --libs` -lpng -lz -lglfw
 
 OBJ=main.o\
     key.o\
@@ -35,7 +35,7 @@ clean:
 MACOBJ=$(addprefix build/mac/,$(OBJ))
 
 MACCFLAGS=$(CFLAGS)
-MACLFLAGS=$(LFLAGS) -framework OpenGL -framework Cocoa -lglfw -lm
+MACLFLAGS=$(LFLAGS) -framework OpenGL -framework Cocoa -lm
 
 mac: $(PROD)-mac
 
@@ -50,7 +50,7 @@ build/mac/%.o: src/%.c $(HEAD)
 LINOBJ=$(addprefix build/linux/,$(OBJ))
 
 LINCFLAGS=$(CFLAGS)
-LINLFLAGS=$(LFLAGS) -lGL -lGLU -lglfw -lm
+LINLFLAGS=$(LFLAGS) -lGL -lGLU -lm
 
 linux: $(PROD)-linux
 
