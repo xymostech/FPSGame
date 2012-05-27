@@ -5,11 +5,14 @@ CFLAGS+=-Isrc/ `freetype-config --cflags`
 UNAME := $(shell $(CC) -dumpmachine 2>&1 | grep -E -o "linux|darwin|win")
 
 LIBS=-lpng -lz -lglfw -lm `freetype-config --libs`
+RELEASELIBS=libs/libfreetype.a -lbz2 libs/libpng15.a -lz libs/libglfw.a -lm
 
 ifeq ($(UNAME), linux)
 	LIBS+=-lGL -lGLU
+	RELEASELIBS+=-lGL -lGLU
 else ifeq ($(UNAME), darwin)
 	LIBS+=-framework OpenGL -framework Cocoa
+	RELEASELIBS+=-framework OpenGL -framework Cocoa
 else
 	$(error Cannot build on your OS)
 endif
@@ -41,6 +44,12 @@ $(PROD): $(BOBJ)
 build/%.o: src/%.c $(HEAD)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
+.PHONY: release
+release: $(PROD)-release
+
+$(PROD)-release: $(BOBJ)
+	$(CC) -o $@ $^ $(RELEASELIBS)
+
 .PHONY: clean
 clean:
-	rm -rf $(PROD) build/*
+	rm -rf $(PROD) $(PROD)-release build/*
