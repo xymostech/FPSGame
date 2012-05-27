@@ -50,6 +50,20 @@ release: $(PROD)-release
 $(PROD)-release: $(BOBJ)
 	$(CC) -o $@ $^ $(RELEASELIBS)
 
+.PHONY: release-app
+release-app: $(PROD).app $(PROD).app.zip
+
+$(PROD).app.zip: $(PROD).app
+	zip -qr $@ $^
+
+$(PROD).app: $(PROD)-release
+	mkdir -p $@/Contents
+	cp buildres/Info.plist $@/Contents/
+	mkdir -p $@/Contents/MacOS
+	cp $(PROD)-release $@/Contents/MacOS/$(PROD)
+	mkdir -p $@/Contents/Resources
+	cp -r res $@/Contents/Resources/
+
 .PHONY: clean
 clean:
-	rm -rf $(PROD) $(PROD)-release build/*
+	rm -rf $(PROD) $(PROD)-release $(PROD).app* build/*
