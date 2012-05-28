@@ -17,7 +17,7 @@ else
 	$(error Cannot build on your OS)
 endif
 
-OBJ=main.o\
+OBJ=game.o\
     key.o\
     mouse.o\
     window.o\
