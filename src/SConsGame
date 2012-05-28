@@ -1,0 +1,29 @@
+game = Environment()
+
+game.Append(LIBS = ['-lglfw', '-lpng', '-lz', '-lm'])
+game.Append(LINKFLAGS = ['-framework', 'OpenGL'])
+game.Append(LINKFLAGS = ['-framework', 'Cocoa'])
+
+game.ParseConfig('freetype-config --cflags --libs')
+
+source = Split("""
+game.c
+key.c
+mouse.c
+window.c
+cam.c
+player.c
+world.c
+model.c
+polygon.c
+hud.c
+font.c
+texture.c
+vector.c
+server.c
+data.c
+""")
+
+game_obj = game.Object(source)
+gprod = game.Program(target = 'FPS', source = game_obj)
+game.Alias('game', gprod)

@@ -1,5 +1,4 @@
-FPS
-FPS-release
 *.o
 .DS_Store
-FPS.app*
+.sconsign.dblite
+build/*

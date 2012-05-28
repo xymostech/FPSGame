@@ -1,0 +1,13 @@
+serv = Environment()
+
+source = Split("""
+serv.c
+servplayer.c
+client.c
+data.c
+packet.c
+""")
+
+serv_obj = serv.Object(source)
+sprod = serv.Program(target = 'serv', source = serv_obj)
+serv.Alias('serv', sprod)
