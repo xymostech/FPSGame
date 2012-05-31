@@ -1,4 +1,45 @@
+import os.path, zipfile, SCons
+
 game = Environment()
+
+def zipbetter(target, source, env):
+    zf = zipfile.ZipFile(str(target[0]), 'w', zipfile.ZIP_DEFLATED)
+    for s in source:
+        basedir = os.path.dirname(str(s))
+        if s.isdir():
+            for dirpath, dirnames, filenames in os.walk(str(s)):
+                for fname in filenames:
+                    path = os.path.join(dirpath, fname)
+                    if os.path.isfile(path):
+                        zf.write(path, os.path.relpath(path, basedir))
+        else:
+            zf.write(str(s), os.path.relpath(str(s), basedir))
+    zf.close()
+
+zipbetter_bld = Builder(action = zipbetter,
+                        target_factory = SCons.Node.FS.default_fs.Entry,
+                        source_factory = SCons.Node.FS.default_fs.Entry)
+
+game.Append(BUILDERS = {'ZipBetter' : zipbetter_bld})
+
+def build_app(env, target, source):
+    env.Command(target[0], source[0],
+        [
+            Mkdir("$TARGET"),
+            Mkdir("$TARGET/Contents"),
+            Copy("$TARGET/Contents", "src/Info.plist"),
+            Mkdir("$TARGET/Contents/MacOS"),
+            Mkdir("$TARGET/Contents/Resources"),
+            Copy("$TARGET/Contents/MacOS", "$SOURCE"),
+            Delete("$TARGET/Contents/Resources/res"),
+            Copy("$TARGET/Contents/Resources/res", "res")
+        ])
+    return [target[0]]
+
+build_app_bld = Builder(action = build_app,
+                        suffix = '.app')
+
+game.Append(BUILDERS = {'App': build_app})
 
 game.Append(LIBS = ['-lglfw', '-lpng', '-lz', '-lm'])
 game.Append(LINKFLAGS = ['-framework', 'OpenGL'])
@@ -25,5 +66,11 @@ data.c
 """)
 
 game_obj = game.Object(source)
-gprod = game.Program(target = 'FPS', source = game_obj)
-game.Alias('game', gprod)
+prod = game.Program(target = 'FPS', source = game_obj)
+game.Alias('game', prod)
+
+gapp = game.App(target = 'FPS.app', source = prod)
+gzip = game.Zip('FPS.zip', '#FPS.app')
+game.Alias('app', gzip)
+
+Default('game')
