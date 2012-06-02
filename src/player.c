@@ -49,9 +49,10 @@ void player_selfupdate(struct player *player, struct world *world, struct server
 	}
 
 	float dist = sqrt(player->xvel*player->xvel + player->zvel*player->zvel);
+
 	if (dist > 0.01) {
-		player->x += player->xvel / dist * 0.05;
-		player->z += player->zvel / dist * 0.05;
+		player->xvel /= dist / 0.05;
+		player->zvel /= dist / 0.05;
 	}
 
 	int x, y;
@@ -102,7 +103,10 @@ void player_selfupdate(struct player *player, struct world *world, struct server
 void player_update(struct player *player, struct world *world) {
 	float old_y = player->y;
 	player->yvel -= 0.005;
+
+	player->x += player->xvel;
 	player->y += player->yvel;
+	player->z += player->zvel;
 
 	int colliding = 0;
 	struct world_object *collide = NULL, *object = world->objects->next;
