@@ -5,6 +5,9 @@ void world_object_delete(struct world_object *object) {
 		case WORLD_FLOOR:
 			world_floor_delete((struct world_floor*)object);
 			break;
+		case WORLD_WALL:
+			world_wall_delete((struct world_wall*)object);
+			break;
 		case WORLD_MODEL:
 			world_model_delete((struct world_model*)object);
 			break;
@@ -20,6 +23,9 @@ void world_object_draw(struct world_object *object) {
 	switch (object->type) {
 		case WORLD_FLOOR:
 			world_floor_draw((struct world_floor*)object);
+			break;
+		case WORLD_WALL:
+			world_wall_draw((struct world_wall*)object);
 			break;
 		case WORLD_MODEL:
 			world_model_draw((struct world_model*)object);
@@ -93,6 +99,56 @@ void world_floor_draw(struct world_floor *floor) {
 		glVertex3f(floor->x2, floor->y, floor->z1);
 		glTexCoord2f(1, 1);
 		glVertex3f(floor->x2, floor->y, floor->z2);
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
+}
+
+struct world_object* world_wall_init(float x1, float y1, float z1, float x2, float y2, float z2, int same_x) {
+	struct world_wall *wall = malloc(sizeof(*wall));
+
+	wall->obj.type = WORLD_WALL;
+	wall->obj.does_hit = 0;
+
+	wall->x1 = x1;
+	wall->y1 = y1;
+	wall->z1 = z1;
+	wall->x2 = x2;
+	wall->z2 = z2;
+	wall->y2 = y2;
+
+	wall->same_x = same_x;
+
+	wall->texture = texture_load("res/debugfloor.png");
+
+	return (struct world_object*)wall;
+}
+
+void world_wall_delete(struct world_wall *wall) {
+	texture_delete(wall->texture);
+	free(wall);
+}
+
+void world_wall_draw(struct world_wall *wall) {
+	glEnable(GL_TEXTURE_2D);
+	texture_use(wall->texture);
+	glColor3f(1, 1, 1);
+
+	glBegin(GL_TRIANGLE_STRIP);
+		glTexCoord2f(0, 0);
+		glVertex3f(wall->x1, wall->y1, wall->z1);
+		if (wall->same_x) {
+			glTexCoord2f(0, 1);
+			glVertex3f(wall->x1, wall->y1, wall->z2);
+			glTexCoord2f(1, 0);
+			glVertex3f(wall->x1, wall->y2, wall->z1);
+		} else {
+			glTexCoord2f(0, 1);
+			glVertex3f(wall->x1, wall->y2, wall->z1);
+			glTexCoord2f(1, 0);
+			glVertex3f(wall->x2, wall->y1, wall->z1);
+		}
+		glTexCoord2f(1, 1);
+		glVertex3f(wall->x2, wall->y2, wall->z2);
 	glEnd();
 	glDisable(GL_TEXTURE_2D);
 }
@@ -203,6 +259,7 @@ struct world* world_init() {
 
 	world_add_object(world, world_floor_init(-5, -5, 5, 5, 0));
 	world_add_object(world, world_floor_init(-15, -5, -5, 5, 0.5));
+	world_add_object(world, world_wall_init(-5, 0, -5, -5, 0.5, 5, 1));
 	world_add_object(world, world_model_init(0, 0.5, 0, "res/cube.obj"));
 	world_add_object(world, world_model_init(2, 0.5, 0, "res/cube.obj"));
 	world_add_object(world, world_model_init(0, 0.5, 2, "res/cube.obj"));

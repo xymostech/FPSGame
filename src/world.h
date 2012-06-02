@@ -11,6 +11,7 @@
 
 enum world_object_type {
 	WORLD_FLOOR,
+	WORLD_WALL,
 	WORLD_MODEL,
 	WORLD_PLAYER
 };
@@ -37,6 +38,19 @@ struct world_floor {
 struct world_object* world_floor_init(float, float, float, float, float);
 void world_floor_delete(struct world_floor*);
 void world_floor_draw(struct world_floor*);
+
+struct world_wall {
+	struct world_object obj;
+
+	float x1, y1, z1, x2, y2, z2;
+	int same_x;
+
+	struct texture *texture;
+};
+
+struct world_object* world_wall_init(float, float, float, float, float, float, int);
+void world_wall_delete(struct world_wall*);
+void world_wall_draw(struct world_wall*);
 
 struct world_model {
 	struct world_object obj;
