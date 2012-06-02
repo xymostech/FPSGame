@@ -31,26 +31,26 @@ void player_delete(struct player *player) {
 }
 
 void player_selfupdate(struct player *player, struct world *world, struct server *server) {
-	float xvel=0, yvel=0, dist;
+	float xvel=0, zvel=0, dist;
 	if (glfwGetKey('W')) {
-		xvel += 0.05*cos(player->xang);
-		yvel += 0.05*sin(player->xang);
+		xvel += cos(player->xang);
+		zvel += sin(player->xang);
 	} else if (glfwGetKey('S')) {
-		xvel -= 0.05*cos(player->xang);
-		yvel -= 0.05*sin(player->xang);
+		xvel -= cos(player->xang);
+		zvel -= sin(player->xang);
 	}
 	if (glfwGetKey('A')) {
-		xvel += 0.05*sin(player->xang);
-		yvel -= 0.05*cos(player->xang);
+		xvel += sin(player->xang);
+		zvel -= cos(player->xang);
 	} else if (glfwGetKey('D')) {
-		xvel -= 0.05*sin(player->xang);
-		yvel += 0.05*cos(player->xang);
+		xvel -= sin(player->xang);
+		zvel += cos(player->xang);
 	}
 
-	dist = sqrt(xvel*xvel + yvel*yvel);
+	dist = sqrt(xvel*xvel + zvel*zvel);
 	if (dist > 0.01) {
 		player->x += xvel / dist * 0.05;
-		player->z += yvel / dist * 0.05;
+		player->z += zvel / dist * 0.05;
 	}
 
 	int x, y;
