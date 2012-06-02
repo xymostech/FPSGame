@@ -101,9 +101,9 @@ void player_selfupdate(struct player *player, struct world *world, struct server
 }
 
 void player_update(struct player *player, struct world *world) {
-	float old_y = player->y;
 	player->yvel -= 0.005;
 
+	float old_x = player->x, old_y = player->y, old_z = player->z;
 	player->x += player->xvel;
 	player->y += player->yvel;
 	player->z += player->zvel;
@@ -122,6 +122,37 @@ void player_update(struct player *player, struct world *world) {
 				collide = object;
 				break;
 			}
+		} else if (object->type == WORLD_WALL) {
+			struct world_wall *wall = (struct world_wall*)object;
+			if (wall->same_x) {
+				if (player->y + 0.3 > wall->y1 &&
+				    player->y + 0.3 < wall->y2 &&
+				    player->z > wall->z1 &&
+				    player->z < wall->z2) {
+					if ((player->x > wall->x1 &&
+					     old_x     < wall->x1) ||
+					    (player->x < wall->x1 &&
+					     old_x     > wall->x1)) {
+						colliding = 1;
+						collide = object;
+						break;
+					}
+				}
+			} else {
+				if (player->y + 0.3 > wall->y1 &&
+				    player->y + 0.3 < wall->y2 &&
+				    player->x > wall->x1 &&
+				    player->x < wall->x2) {
+					if ((player->z > wall->z1 &&
+					     old_z     < wall->z1) ||
+					    (player->z < wall->z1 &&
+					     old_z     > wall->z1)) {
+						colliding = 1;
+						collide = object;
+						break;
+					}
+				}
+			}
 		}
 		object = object->next;
 	}
@@ -132,6 +163,21 @@ void player_update(struct player *player, struct world *world) {
 			player->yvel = 0;
 			player->on_ground = 1;
 			player->y = 0.001 + floor->y;
+		} else if (collide->type == WORLD_WALL) {
+			struct world_wall *wall = (struct world_wall*)collide;
+			if (wall->same_x) {
+				if (old_x < wall->x1) {
+					player->x = old_x;
+				} else {
+					player->x = old_x;
+				}
+			} else {
+				if (old_z < wall->z1) {
+					player->z = old_z;
+				} else {
+					player->z = old_z;
+				}
+			}
 		}
 	} else {
 		player->on_ground = 0;
