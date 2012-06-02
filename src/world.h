@@ -29,12 +29,12 @@ void world_object_dohit(struct world_object*);
 struct world_floor {
 	struct world_object obj;
 
-	float x1, y1, x2, y2;
+	float x1, z1, x2, z2, y;
 
 	struct texture *texture;
 };
 
-struct world_object* world_floor_init(float, float, float, float);
+struct world_object* world_floor_init(float, float, float, float, float);
 void world_floor_delete(struct world_floor*);
 void world_floor_draw(struct world_floor*);
 

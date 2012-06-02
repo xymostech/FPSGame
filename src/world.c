@@ -57,16 +57,17 @@ void world_object_dohit(struct world_object *object) {
 	}
 }
 
-struct world_object* world_floor_init(float x1, float y1, float x2, float y2) {
+struct world_object* world_floor_init(float x1, float z1, float x2, float z2, float y) {
 	struct world_floor *floor = malloc(sizeof(*floor));
 
 	floor->obj.type = WORLD_FLOOR;
 	floor->obj.does_hit = 0;
 
 	floor->x1 = x1;
-	floor->y1 = y1;
+	floor->z1 = z1;
 	floor->x2 = x2;
-	floor->y2 = y2;
+	floor->z2 = z2;
+	floor->y  = y;
 
 	floor->texture = texture_load("res/debugfloor.png");
 
@@ -85,13 +86,13 @@ void world_floor_draw(struct world_floor *floor) {
 	
 	glBegin(GL_TRIANGLE_STRIP);
 		glTexCoord2f(0, 0);
-		glVertex3f(floor->x1, 0, floor->y1);
+		glVertex3f(floor->x1, floor->y, floor->z1);
 		glTexCoord2f(0, 1);
-		glVertex3f(floor->x1, 0, floor->y2);
+		glVertex3f(floor->x1, floor->y, floor->z2);
 		glTexCoord2f(1, 0);
-		glVertex3f(floor->x2, 0, floor->y1);
+		glVertex3f(floor->x2, floor->y, floor->z1);
 		glTexCoord2f(1, 1);
-		glVertex3f(floor->x2, 0, floor->y2);
+		glVertex3f(floor->x2, floor->y, floor->z2);
 	glEnd();
 	glDisable(GL_TEXTURE_2D);
 }
@@ -200,7 +201,8 @@ struct world* world_init() {
 	world->objects->next = world->objects;
 	world->objects->prev = world->objects;
 
-	world_add_object(world, world_floor_init(-5, -5, 5, 5));
+	world_add_object(world, world_floor_init(-5, -5, 5, 5, 0));
+	world_add_object(world, world_floor_init(-15, -5, -5, 5, 0.5));
 	world_add_object(world, world_model_init(0, 0.5, 0, "res/cube.obj"));
 	world_add_object(world, world_model_init(2, 0.5, 0, "res/cube.obj"));
 	world_add_object(world, world_model_init(0, 0.5, 2, "res/cube.obj"));

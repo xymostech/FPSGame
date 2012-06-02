@@ -108,11 +108,11 @@ void player_update(struct player *player, struct world *world) {
 	while (object != world->objects) {
 		if (object->type == WORLD_FLOOR) {
 			struct world_floor *floor = (struct world_floor*)object;
-			if (old_y > 0 && player->y < 0 &&
+			if (old_y > floor->y && player->y < floor->y &&
 			    player->x > floor->x1 &&
 			    player->x < floor->x2 &&
-			    player->z > floor->y1 &&
-			    player->z < floor->y2) {
+			    player->z > floor->z1 &&
+			    player->z < floor->z2) {
 				colliding = 1;
 				collide = object;
 				break;
@@ -122,9 +122,12 @@ void player_update(struct player *player, struct world *world) {
 	}
 
 	if (colliding) {
-		player->yvel = 0;
-		player->on_ground = 1;
-		player->y = 0.001;
+		if (collide->type == WORLD_FLOOR) {
+			struct world_floor *floor = (struct world_floor*)collide;
+			player->yvel = 0;
+			player->on_ground = 1;
+			player->y = 0.001 + floor->y;
+		}
 	} else {
 		player->on_ground = 0;
 	}
