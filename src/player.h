@@ -18,7 +18,7 @@ struct player {
 	float x, y, z;
 	float xang, yang;
 
-	float yvel;
+	float xvel, yvel, zvel;
 	int on_ground;
 
 	struct cam cam;
