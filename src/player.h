@@ -12,6 +12,13 @@
 
 struct world;
 
+struct collide_event {
+	struct world_object *object;
+	struct collide_event *next;
+};
+
+struct collide_event* add_collide_event(struct collide_event*, struct world_object*);
+
 struct player {
 	int id;
 
