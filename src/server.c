@@ -128,6 +128,16 @@ void server_position_packet(struct server *server, struct player *player) {
 	server_sendpacket(server, packet, 20);
 }
 
+void server_hit_packet(struct server *server, struct player *player) {
+	unsigned char packet[6];
+
+	data_pack_int16(packet, 6);
+	data_pack_int16(packet+2, server->id);
+	data_pack_int16(packet+4, player->id);
+
+	server_sendpacket(server, packet, 6);
+}
+
 void server_handle_updates(struct server *server, struct world *world) {
 	char buffer[1024];
 	while (1) {

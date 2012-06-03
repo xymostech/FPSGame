@@ -50,3 +50,12 @@ void packet_send_position(int sock, struct client *to, struct client *pos) {
 
 	client_sendpacket(to, sock, buffer, 20);
 }
+
+void packet_send_hit(int sock, struct client *to, struct client *hit) {
+	unsigned char buffer[4];
+
+	data_pack_int16(buffer, 6);
+	data_pack_int16(buffer+2, hit->id);
+
+	client_sendpacket(to, sock, buffer, 4);
+}
