@@ -258,8 +258,13 @@ struct world* world_init() {
 	world->objects->prev = world->objects;
 
 	world_add_object(world, world_floor_init(-5, -5, 5, 5, 0));
-	world_add_object(world, world_floor_init(-15, -5, -5, 5, 0.5));
-	world_add_object(world, world_wall_init(-5, 0, -5, -5, 0.5, 5, 1));
+	world_add_object(world, world_floor_init(-5, 5, 15, 15, 0.5));
+	world_add_object(world, world_floor_init(5, -5, 15, 5, 1));
+
+	world_add_object(world, world_wall_init(-5, 0, 5, 5, 0.5, 5, 0));
+	world_add_object(world, world_wall_init(5, 0.5, 5, 15, 1, 5, 0));
+	world_add_object(world, world_wall_init(5, 0, -5, 5, 1, 5, 1));
+
 	world_add_object(world, world_model_init(0, 0.5, 0, "res/cube.obj"));
 	world_add_object(world, world_model_init(2, 0.5, 0, "res/cube.obj"));
 	world_add_object(world, world_model_init(0, 0.5, 2, "res/cube.obj"));
