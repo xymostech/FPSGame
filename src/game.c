@@ -49,6 +49,7 @@ void draw() {
 void update() {
 	player_selfupdate(my_player, my_world, my_server);
 	player_update(my_player, my_world);
+	world_update(my_world, my_server);
 	server_handle_updates(my_server, my_world);
 }
 

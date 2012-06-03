@@ -8,6 +8,7 @@
 #include "vector.h"
 #include "texture.h"
 #include "player.h"
+#include "server.h"
 
 enum world_object_type {
 	WORLD_FLOOR,
@@ -24,6 +25,7 @@ struct world_object {
 
 void world_object_delete(struct world_object*);
 void world_object_draw(struct world_object*);
+void world_object_update(struct world_object*, struct server*);
 float world_object_hittest(struct world_object*, struct vector, struct vector);
 void world_object_dohit(struct world_object*);
 
@@ -79,6 +81,7 @@ struct world_player {
 struct world_object* world_player_init(int, float, float, float, char*);
 void world_player_delete(struct world_player*);
 void world_player_draw(struct world_player*);
+void world_player_update(struct world_player*, struct server*);
 float world_player_hittest(struct world_player*, struct vector, struct vector);
 void world_player_dohit(struct world_player*);
 
@@ -91,6 +94,7 @@ void world_delete(struct world*);
 
 void world_add_object(struct world*, struct world_object*);
 
+void world_update(struct world*, struct server*);
 void world_draw(struct world*);
 
 #endif /* WORLD_H */

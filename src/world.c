@@ -38,6 +38,16 @@ void world_object_draw(struct world_object *object) {
 	}
 }
 
+void world_object_update(struct world_object *object, struct server *server) {
+	switch (object->type) {
+		case WORLD_PLAYER:
+			world_player_update((struct world_player*)object, server);
+			break;
+		default:
+			break;
+	}
+}
+
 float world_object_hittest(struct world_object *object, struct vector start, struct vector dir) {
 	switch (object->type) {
 		case WORLD_MODEL:
@@ -233,11 +243,13 @@ void world_player_draw(struct world_player *player) {
 		glColor3f(1, 1, 1);
 	}
 
-	player->was_hit = 0;
-
 	model_draw(player->model);
 
 	glPopMatrix();
+}
+
+void world_player_update(struct world_player *player, struct server *server) {
+	player->was_hit = 0;
 }
 
 float world_player_hittest(struct world_player *player, struct vector start, struct vector dir) {
@@ -293,6 +305,14 @@ void world_draw(struct world *world) {
 	struct world_object *object = world->objects->next;
 	while (object != world->objects) {
 		world_object_draw(object);
+		object = object->next;
+	}
+}
+
+void world_update(struct world *world, struct server *server) {
+	struct world_object *object = world->objects->next;
+	while (object != world->objects) {
+		world_object_update(object, server);
 		object = object->next;
 	}
 }
