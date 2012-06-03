@@ -134,9 +134,9 @@ void player_update(struct player *player, struct world *world) {
 			struct world_wall *wall = (struct world_wall*)object;
 			if (wall->same_x) {
 				if (player->y + 0.3 > wall->y1 &&
-				    player->y + 0.3 < wall->y2 &&
-				    player->z > wall->z1 &&
-				    player->z < wall->z2) {
+				    player->y       < wall->y2 &&
+				    old_z > wall->z1 &&
+				    old_z < wall->z2) {
 					if ((player->x > wall->x1 &&
 					     old_x     < wall->x1) ||
 					    (player->x < wall->x1 &&
@@ -145,10 +145,10 @@ void player_update(struct player *player, struct world *world) {
 					}
 				}
 			} else {
-				if (player->y + 0.3 > wall->y1 &&
-				    player->y + 0.3 < wall->y2 &&
-				    player->x > wall->x1 &&
-				    player->x < wall->x2) {
+				if (player->y + 0.30 > wall->y1 &&
+				    player->y + 0.01 < wall->y2 &&
+				    old_x > wall->x1 &&
+				    old_x < wall->x2) {
 					if ((player->z > wall->z1 &&
 					     old_z     < wall->z1) ||
 					    (player->z < wall->z1 &&
