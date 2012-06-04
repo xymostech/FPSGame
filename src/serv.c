@@ -137,6 +137,17 @@ int main(int argc, char const *argv[])
 				}
 				loop = loop->next;
 			}
+		} else if (type == 6) {
+			int id = data_unpack_int16(buffer+2);
+			int hit = data_unpack_int16(buffer+4);
+			struct client *loop = clients->next, *client;
+			while (loop != clients) {
+				if (loop->id == id) {
+					client = loop;
+					break;
+				}
+				loop = loop->next;
+			}
 		} else {
 			printf("Got unknown packet type: %d\n", type);
 		}

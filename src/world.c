@@ -249,7 +249,10 @@ void world_player_draw(struct world_player *player) {
 }
 
 void world_player_update(struct world_player *player, struct server *server) {
-	player->was_hit = 0;
+	if (player->was_hit) {
+		server_hit_packet(server, player->player);
+		player->was_hit = 0;
+	}
 }
 
 float world_player_hittest(struct world_player *player, struct vector start, struct vector dir) {
