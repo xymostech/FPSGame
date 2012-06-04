@@ -28,6 +28,8 @@ struct player {
 	float xvel, yvel, zvel;
 	int on_ground;
 
+	int reload;
+
 	struct cam cam;
 };
 

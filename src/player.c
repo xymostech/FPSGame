@@ -33,6 +33,8 @@ struct player* player_init(int id) {
 	player->cam.yang = M_PI_2;
 	player->cam.xang = -M_PI_2;
 
+	player->reload = 0;
+
 	return player;
 }
 
@@ -85,29 +87,36 @@ void player_selfupdate(struct player *player, struct world *world, struct server
 
 	server_position_update(server, player);
 
-	struct vector start = vect(player->x, player->y + 0.4, player->z);
-	struct vector dir = vect(cos(player->xang)*sin(player->yang),
-	                         cos(player->yang),
-	                         sin(player->xang)*sin(player->yang));
-	
-	struct world_object *hit_object = NULL, *object = world->objects->next;
-	float best_dist = -1, test_dist;
-	while (object != world->objects) {
-		if (object->does_hit) {
-			test_dist = world_object_hittest(object, start, dir);
-			if (best_dist < 0 && test_dist > 0) {
-				best_dist = test_dist;
-				hit_object = object;
-			} else if (test_dist > 0 && test_dist < best_dist) {
-				best_dist = test_dist;
-				hit_object = object;
+	if (player->reload == 0 && mouse_left_pressed()) {
+		struct vector start = vect(player->x, player->y + 0.4, player->z);
+		struct vector dir = vect(cos(player->xang)*sin(player->yang),
+					 cos(player->yang),
+					 sin(player->xang)*sin(player->yang));
+		struct world_object *hit_object = NULL, *object = world->objects->next;
+		float best_dist = -1, test_dist;
+		while (object != world->objects) {
+			if (object->does_hit) {
+				test_dist = world_object_hittest(object, start, dir);
+				if (best_dist < 0 && test_dist > 0) {
+					best_dist = test_dist;
+					hit_object = object;
+				} else if (test_dist > 0 && test_dist < best_dist) {
+					best_dist = test_dist;
+					hit_object = object;
+				}
 			}
+			object = object->next;
 		}
-		object = object->next;
+		if (hit_object != NULL) {
+			world_object_dohit(hit_object);
+		}
+		player->reload = 100;
 	}
-	if (hit_object != NULL) {
-		world_object_dohit(hit_object);
+	
+	if (player->reload > 0) {
+		player->reload--;
 	}
+
 }
 
 void player_update(struct player *player, struct world *world) {
