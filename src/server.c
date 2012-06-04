@@ -138,7 +138,7 @@ void server_hit_packet(struct server *server, struct player *player) {
 	server_sendpacket(server, packet, 6);
 }
 
-void server_handle_updates(struct server *server, struct world *world) {
+void server_handle_updates(struct server *server, struct player *my_player, struct world *world) {
 	char buffer[1024];
 	while (1) {
 		int len = recvfrom(server->socket, buffer, 1024, 0, NULL, NULL);
@@ -149,6 +149,14 @@ void server_handle_updates(struct server *server, struct world *world) {
 		if (type == 1) {
 			int id = data_unpack_int16(buffer+2);
 			world_add_object(world, world_player_init(id, 0.0, 0.0, 0.0, "res/cube.obj"));
+		} else if (type == 4) {
+			float x, y, z;
+			data_unpack_float32(buffer+2, &x);
+			data_unpack_float32(buffer+6, &y);
+			data_unpack_float32(buffer+10, &z);
+			my_player->x = x;
+			my_player->y = y;
+			my_player->z = z;
 		} else if (type == 5) {
 			int id = data_unpack_int16(buffer+2);
 			float x, y, z, yvel;

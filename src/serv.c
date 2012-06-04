@@ -140,13 +140,19 @@ int main(int argc, char const *argv[])
 		} else if (type == 6) {
 			int id = data_unpack_int16(buffer+2);
 			int hit = data_unpack_int16(buffer+4);
-			struct client *loop = clients->next, *client;
+			struct client *loop = clients->next, *client = NULL;
 			while (loop != clients) {
-				if (loop->id == id) {
+				if (loop->id == hit) {
 					client = loop;
 					break;
 				}
 				loop = loop->next;
+			}
+			if (client) {
+				client->player.x = 0;
+				client->player.y = 0.1;
+				client->player.z = 0;
+				packet_send_respawn(sock, client);
 			}
 		} else {
 			printf("Got unknown packet type: %d\n", type);

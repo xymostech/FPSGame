@@ -40,6 +40,6 @@ void server_disconnect_packet(struct server*);
 void server_position_packet(struct server*, struct player*);
 void server_hit_packet(struct server*, struct player*);
 
-void server_handle_updates(struct server*, struct world*);
+void server_handle_updates(struct server*, struct player*, struct world*);
 
 #endif /* SERVER_H */
