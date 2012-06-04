@@ -1,3 +1,9 @@
+/*
+ * serv.c
+ *
+ * entry point for the serv program
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -14,10 +20,16 @@
 
 #define BUFFER_SIZE 1500
 
-int main(int argc, char const *argv[])
-{
+/*
+ * make_socket(void)
+ *
+ * creates a bound socket to read data from
+ *
+ * returns: the socket, or -1 if error
+ */
+int make_socket() {
 	int sock;
-	
+
 	struct addrinfo hints, *info, *p;
 
 	memset(&hints, 0, sizeof(hints));
@@ -29,13 +41,15 @@ int main(int argc, char const *argv[])
 
 	if ((result = getaddrinfo(NULL, "1234", &hints, &info)) != 0) {
 		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(result));
-		return 1;
+		return -1;
 	}
 
 	for (p=info; p!=NULL; p = p->ai_next) {
-		if ((sock = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
+		if ((sock = socket(p->ai_family,
+		                   p->ai_socktype,
+		                   p->ai_protocol)) == -1) {
 			perror("socket");
-			return 1;
+			continue;
 		}
 
 		if (bind(sock, p->ai_addr, p->ai_addrlen) == -1) {
@@ -49,13 +63,29 @@ int main(int argc, char const *argv[])
 
 	if (p == NULL) {
 		fprintf(stderr, "could not bind socket\n");
-		return 1;
+		return -1;
 	}
 
 	freeaddrinfo(info);
 
+	return sock;
+}
+
+/*
+ * main
+ *
+ * main entry function for the server program
+ */
+int main(int argc, char const *argv[])
+{
+	int sock = make_socket();
+
+	if (sock < 0) {
+		return 1;
+	}
+
 	struct sockaddr_storage recv_addr;
-	int addr_len = sizeof(recv_addr);
+	int addr_len;
 
 	unsigned char buffer[BUFFER_SIZE];
 
@@ -66,7 +96,9 @@ int main(int argc, char const *argv[])
 
 	while (1) {
 		addr_len = sizeof(recv_addr);
-		if ((result = recvfrom(sock, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&recv_addr, &addr_len)) == -1) {
+		if ((result = recvfrom(sock, buffer, BUFFER_SIZE, 0,
+		                       (struct sockaddr*)&recv_addr,
+		                       &addr_len)) == -1) {
 			perror("recvfrom");
 			continue;
 		}
@@ -76,7 +108,9 @@ int main(int argc, char const *argv[])
 		if (type == 1) {
 			// new connection
 			printf("New connection: %d\n", client_max_id);
-			struct client *client = client_init(client_max_id, (struct sockaddr*)&recv_addr, addr_len);
+			struct client *client = client_init(client_max_id,
+			                          (struct sockaddr*)&recv_addr,
+			                          addr_len);
 			client_max_id++;
 			client->next = clients->next;
 			client->prev = clients;
