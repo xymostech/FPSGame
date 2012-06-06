@@ -128,14 +128,8 @@ int main(int argc, char const *argv[])
 		} else if (type == 2) {
 			int id = data_unpack_int16(buffer+2);
 			printf("Client disconnected: %d\n", id);
-			struct client *loop = clients->next, *client;
-			while (loop != clients) {
-				if (loop->id == id) {
-					client = loop;
-					break;
-				}
-			}
-			if (client != clients) {
+			struct client *client = client_lookup(clients, id);
+			if (client) {
 				client->prev->next = client->next;
 				client->next->prev = client->prev;
 				loop = clients->next;
@@ -152,36 +146,24 @@ int main(int argc, char const *argv[])
 			data_unpack_float32(buffer+8, &y);
 			data_unpack_float32(buffer+12, &z);
 			data_unpack_float32(buffer+16, &yvel);
-			struct client *loop = clients->next, *client;
-			while (loop != clients) {
-				if (loop->id == id) {
-					client = loop;
-					break;
+			struct client *client = client_lookup(clients, id);
+			if (client) {
+				client->player.x = x;
+				client->player.y = y;
+				client->player.z = z;
+				client->player.yvel = yvel;
+				loop = clients->next;
+				while (loop != clients) {
+					if (loop->id != id) {
+						packet_send_position(sock, loop, client);
+					}
+					loop = loop->next;
 				}
-				loop = loop->next;
-			}
-			client->player.x = x;
-			client->player.y = y;
-			client->player.z = z;
-			client->player.yvel = yvel;
-			loop = clients->next;
-			while (loop != clients) {
-				if (loop->id != id) {
-					packet_send_position(sock, loop, client);
-				}
-				loop = loop->next;
 			}
 		} else if (type == 6) {
 			int id = data_unpack_int16(buffer+2);
 			int hit = data_unpack_int16(buffer+4);
-			struct client *loop = clients->next, *client = NULL;
-			while (loop != clients) {
-				if (loop->id == hit) {
-					client = loop;
-					break;
-				}
-				loop = loop->next;
-			}
+			struct client *client = client_lookup(clients, hit);
 			if (client) {
 				client->player.x = 0;
 				client->player.y = 0.1;

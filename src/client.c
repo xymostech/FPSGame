@@ -17,3 +17,14 @@ void client_delete(struct client *client) {
 int client_sendpacket(struct client *client, int sock, unsigned char *packet, int size) {
 	return sendto(sock, packet, size, 0, (struct sockaddr*)&client->addr, client->addrlen);
 }
+
+struct client* client_lookup(struct client *clients, int id) {
+	struct client *loop = clients->next;
+	while (loop != clients) {
+		if (loop->id == id) {
+			return loop;
+		}
+		loop = loop->next;
+	}
+	return NULL;
+}

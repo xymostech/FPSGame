@@ -27,4 +27,6 @@ void client_delete(struct client*);
 
 int client_sendpacket(struct client*, int, unsigned char*, int);
 
+struct client* client_lookup(struct client*, int);
+
 #endif /* CLIENT_H */
