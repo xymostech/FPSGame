@@ -70,7 +70,7 @@ prod = game.Program(target = 'FPS', source = game_obj)
 game.Alias('game', prod)
 
 gapp = game.App(target = 'FPS.app', source = prod)
-gzip = game.Zip('FPS.zip', '#FPS.app')
+gzip = game.Zip('FPS.zip', 'FPS.app')
 game.Alias('app', gzip)
 
 Default('game')
